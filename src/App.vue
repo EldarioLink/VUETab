@@ -1,28 +1,39 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <button @click.prevent="showTab" class="btn_add_table">Добавить таблицу</button>
+
+    <addtable v-if="showModal"></addtable>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import {
+    mapGetters
+  } from 'vuex'
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  export default {
+    name: 'app',
+    data() {
+      return {
+        showModal: false,
+      };
+    },
+    methods: {
+      showTab() {
+        this.showModal = !this.showModal
+      }
+    }
   }
-}
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  .btn_add_table {
+    border: 0px solid black;
+    width: 10%;
+    height: 5%;
+    border-radius: 5px;
+    line-height: 30px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
 </style>
