@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 import VueAxios from "vue-axios";
 
-Vue.use(Vuex,VueAxios, axios, Vuex);
+Vue.use(Vuex, VueAxios, axios, Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -14,14 +14,41 @@ export default new Vuex.Store({
       options: []
     },
     tables: [],
-    isLoading: false
+    isLoading: false,
+    static_headers: [
+      "ID",
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "address.streetAddress",
+      "address.city",
+      "address.state",
+      "address.zip",
+      "description",
+      "Actions"
+    ]
   },
   mutations: {
-    //
+    IS_LOADING(state, payload) {
+      state.isLoading = payload;
+    },
+    addNewDefaultTable(state, payload) {
+      let el = Object.assign({}, state.tableFields);
 
-    addEmptyTable: (state, payload) => {
+      el.rows = this.static_headers;
+      el.value = payload;
+      el.isLoading = false;
+
+      state.tables.push(el);
+      state.isLoading = false;
+    },
+    addEmptyTable(state, payload) {
       // удаление пробелов и преобразование в массив
-      let headers = payload.headers.replace(/\s+/g, "").split(",");
+      let headers = payload.headers
+        .toString()
+        .replace(/\s+/g, "")
+        .split(",");
       headers.push("Actions");
 
       let arr = [];
@@ -33,7 +60,7 @@ export default new Vuex.Store({
         arr.push(arrIn);
       }
       let el = Object.assign({}, state.tableFields);
-      el.rows = payload.rows;
+      el.rows = headers;
       el.value = arr;
       el.options = payload.css
         ? payload.css.replace(/\s+/g, "").split(",", 3)
@@ -43,20 +70,17 @@ export default new Vuex.Store({
     }
   },
 
-  addDefaultTable: (state, payload) => {
-    this.axios
-      .get(
-        "http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&adress={addressObject}&description={lorem|32}"
-      )
-      .then(response => {
-        console.log(response.data);
-        // this.json = response.data;
-        // this.setPage(this.json.length, 1);
-        // this.$store.commit("IS_LOADING", false);
-        // this.isTableReady = true;
-      });
+  actions: {
+    addDefaultTable(state, payload) {
+      state.commit("IS_LOADING", true);
+      axios
+        .get(
+          "http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&adress={addressObject}&description={lorem|32}"
+        )
+        .then(response => {
+          state.commit("addNewDefaultTable", response.data);
+        });
+    }
   },
-
-  actions: {},
   getters: {}
 });
