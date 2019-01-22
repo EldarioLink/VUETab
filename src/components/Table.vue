@@ -1,8 +1,8 @@
 <template>
-    <div class="hello">
+    <div>
         <div class="parent_table">
             <div class="div_for_align_boxes">
-                <table border="1" class="table">
+                <table class="table" border="1">
 
                     <tr :class="setCustomHeaders()">
                         <td class="static_headers" v-for="(header,indexTable) in table.rows" :key="indexTable">{{ header }} </td>
@@ -21,7 +21,7 @@
                 <div class="table_btn_controls">
                     <button>Удалить таблицу</button>
                     <!-- <button @click="cleanTable">Очистить таблицу</button>
-                    <button id="show-modal" @click="saveJson = true">Получить таблицу</button> -->
+                            <button id="show-modal" @click="saveJson = true">Получить таблицу</button> -->
                 </div>
 
                 <div class="pagination_controls">
@@ -38,13 +38,19 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .parent_table {
+        display: flex;
+        flex-direction: column;
+    }
+
     .table {
-        width: 80%;
+        width: 100%;
         border-collapse: collapse;
-        border: 1px solid gray;
+        border: 2px solid gray;
     }
 
     .div_for_align_boxes {
+        width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -54,11 +60,12 @@
     .table_boxes {
         padding: 10px;
         text-align: center;
+        border: 2px solid gray;
     }
 
     .table_all_controls {
-        margin-top:50px;
-        align-items:  flex-end;
+        margin-top: 40px;
+        align-items: flex-end;
         display: flex;
         justify-content: space-around;
     }
@@ -66,22 +73,20 @@
     .no-wrap-section {
         white-space: nowrap;
         text-align: center;
+        padding: 10px;
+        text-align: center;
+        border: 2px solid gray;
     }
 
     .customize-headers {
-        background: #FF0;
+        background: #FFFFCC;
     }
 
     .td-even:nth-child(even) {
-        background: #CCC;
+        background: #99FF99;
     }
 
     .td-odd:nth-child(odd) {
-        background: rgb(216, 30, 30);
-    }
-
-    .parent_table {
-        display: flex;
-        flex-direction: column;
+        background: #CCFFFF;
     }
 </style>

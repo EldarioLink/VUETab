@@ -52,6 +52,6 @@
     margin-bottom: 20px;
   }
   .tables{
-    margin-top: 40px
+    margin-top: 70px
   }
 </style>
