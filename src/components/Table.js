@@ -1,24 +1,27 @@
 import { mapGetters } from "vuex";
 export default {
-    props: ['tables'],
+  props: ["tables"],
 
   data() {
     return {
       perPage: 10,
-      pagination: {},
+      pagination: {}
     };
   },
   computed: {
     // Возвратим заголовки таблицы
     tabs() {
-      console.log(this.tables)
-      return this.tables
-    },
+      return this.tables;
+    }
   },
   methods: {
+    collection(value) {
+      return this.paginate(value);
+    },
     // Данные для пагинаций
     setPage(length, page) {
       this.pagination = this.paginator(length, page);
+
     },
     paginate(array) {
       return _.slice(
@@ -37,18 +40,18 @@ export default {
         pages: _.range(1, Math.ceil(totalItems / this.perPage) + 1)
       };
     },
-
     setCustomHeaders(i) {
-      console.log(i)
-      return this.tables[i].options[0]
+      console.log(i);
+      return this.tables[i].options[0];
     },
     setCustomTdEven(i) {
-      return this.tables[i].options[1]
+      return this.tables[i].options[1];
     },
     setCustomTdOdd(i) {
-      return this.tables[i].options[2]
+      return this.tables[i].options[2];
     }
   },
-  mounted() {
+ mounted() {
+    this.setPage(this.tables[0].value.length  , 1);
   }
 };
