@@ -2,14 +2,13 @@
   <div id="app">
     <button @click.prevent="showTab" class="btn_add_table">Добавить таблицу</button>
 
-    <addtable v-if="showModal"></addtable>
+    <addtable @close="showTab" v-if="showModal"></addtable>
+    <tab v-if="tableExist" :tables="tables"></tab>
   </div>
 </template>
 
 <script>
-  import {
-    mapGetters
-  } from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'app',
@@ -21,8 +20,17 @@
     methods: {
       showTab() {
         this.showModal = !this.showModal
-      }
+      },
+    },
+  computed: {
+    ...mapGetters({
+      tables: 'getTables',
+      getStaticHeaders: 'static_headers'
+    }),
+    tableExist(){
+     return this.tables.length !=0
     }
+  },
   }
 </script>
 

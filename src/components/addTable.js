@@ -29,7 +29,7 @@ export default {
         this.changeFlags();
        this.addDefaultTable()
       }
-      this.$emit('click')
+      this.$emit('close');
     },
     // Скрываем модальное окно, показываем индикатор загрузки, и таблицу
     changeFlags() {

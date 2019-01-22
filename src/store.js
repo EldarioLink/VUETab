@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 import VueAxios from "vue-axios";
 
-Vue.use(Vuex, VueAxios, axios, Vuex);
+Vue.use(Vuex, VueAxios, axios);
 
 export default new Vuex.Store({
   state: {
@@ -33,14 +33,34 @@ export default new Vuex.Store({
     IS_LOADING(state, payload) {
       state.isLoading = payload;
     },
-    addNewDefaultTable(state, payload) {
-      let el = Object.assign({}, state.tableFields);
 
-      el.rows = this.static_headers;
-      el.value = payload;
+    addDefaultTable(state, payload) {
+      //избавляемся от вложенных объектов
+      var storage_local = [];
+      var obj = [];
+
+      var getProp = o => {
+        for (var prop in o) {
+          if (typeof o[prop] === "object") {
+            getProp(o[prop]);
+          } else {
+            obj.push(o[prop]);
+          }
+        }
+      };
+      for (let i = 0; i < payload.length; i++) {
+        getProp(payload[i]);
+        storage_local.push(obj);
+        obj = [];
+      }
+
+      let el = Object.assign({}, state.tableFields);
+      el.rows = state.static_headers;
+      el.value = storage_local;
       el.isLoading = false;
 
       state.tables.push(el);
+      console.log(el);
       state.isLoading = false;
     },
     addEmptyTable(state, payload) {
@@ -78,9 +98,13 @@ export default new Vuex.Store({
           "http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&adress={addressObject}&description={lorem|32}"
         )
         .then(response => {
-          state.commit("addNewDefaultTable", response.data);
+          console.log(response.data);
+          state.commit("addDefaultTable", response.data);
         });
     }
   },
-  getters: {}
+  getters: {
+    getTables: state => state.tables,
+    getStaticHeaders: state => state.static_headers
+  }
 });
