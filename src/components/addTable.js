@@ -3,7 +3,7 @@ import { mapMutations, mapActions } from "vuex";
 export default {
   data() {
     return {
-      headers: [],
+      headers: undefined,
       rows: 1,
       css_table: "customize-headers, td-even, td-odd"
     };
@@ -18,7 +18,7 @@ export default {
 
     checkInputs() {
       // Если есть ли заголовки таблицы, то создаем пользо-ую таблицу
-      if (this.headers.lenght) {
+      if (this.headers ) {
         let user_tb = {
           headers: this.headers,
           rows: this.rows,
@@ -26,14 +26,12 @@ export default {
         };
         this.addEmptyTable(user_tb);
       } else {
-        this.changeFlags();
-       this.addDefaultTable()
+        let user_tb = {
+          css: this.css_table
+        };
+       this.addDefaultTable(user_tb)
       }
       this.$emit('close');
     },
-    // Скрываем модальное окно, показываем индикатор загрузки, и таблицу
-    changeFlags() {
-      this.$store.commit("IS_LOADING", true);
-    }
   }
 };

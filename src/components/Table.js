@@ -1,24 +1,19 @@
 import { mapGetters } from "vuex";
 export default {
-    props: ['tables', 'static_headers'],
+    props: ['tables'],
 
   data() {
     return {
       perPage: 10,
       pagination: {},
-      customizeTd: undefined
     };
   },
   computed: {
-
-    collection() {
-
-      return this.paginate(   );
-    },
     // Возвратим заголовки таблицы
-    headers() {
-      return this.tables.headers
-    }
+    tabs() {
+      console.log(this.tables)
+      return this.tables
+    },
   },
   methods: {
     // Данные для пагинаций
@@ -41,6 +36,17 @@ export default {
         endIndex: endIndex,
         pages: _.range(1, Math.ceil(totalItems / this.perPage) + 1)
       };
+    },
+
+    setCustomHeaders(i) {
+      console.log(i)
+      return this.tables[i].options[0]
+    },
+    setCustomTdEven(i) {
+      return this.tables[i].options[1]
+    },
+    setCustomTdOdd(i) {
+      return this.tables[i].options[2]
     }
   },
   mounted() {

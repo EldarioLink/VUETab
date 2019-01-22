@@ -4,11 +4,16 @@
 
     <addtable @close="showTab" v-if="showModal"></addtable>
     <tab v-if="tableExist" :tables="tables"></tab>
+    <div class="vld-parent">
+      <loading :active.sync="isLoading"></loading>
+    </div>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
     name: 'app',
@@ -21,16 +26,21 @@
       showTab() {
         this.showModal = !this.showModal
       },
+
     },
-  computed: {
-    ...mapGetters({
-      tables: 'getTables',
-      getStaticHeaders: 'static_headers'
-    }),
-    tableExist(){
-     return this.tables.length !=0
-    }
-  },
+    computed: {
+      ...mapGetters({
+        tables: 'getTables',
+        getStaticHeaders: 'static_headers',
+        Loading: 'getisLoading',
+      }),
+      tableExist() {
+        return this.tables.length != 0
+      },
+      isLoading() {
+        return this.Loading
+      }
+    },
   }
 </script>
 

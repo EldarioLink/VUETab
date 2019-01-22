@@ -11,7 +11,7 @@ export default new Vuex.Store({
       value: [],
       page: 1,
       rows: [],
-      options: []
+      options: [],
     },
     tables: [],
     isLoading: false,
@@ -27,7 +27,7 @@ export default new Vuex.Store({
       "address.zip",
       "description",
       "Actions"
-    ]
+    ],
   },
   mutations: {
     IS_LOADING(state, payload) {
@@ -37,30 +37,31 @@ export default new Vuex.Store({
     addDefaultTable(state, payload) {
       //избавляемся от вложенных объектов
       var storage_local = [];
-      var obj = [];
+      var subarr = [];
 
       var getProp = o => {
         for (var prop in o) {
           if (typeof o[prop] === "object") {
             getProp(o[prop]);
           } else {
-            obj.push(o[prop]);
+            subarr.push(o[prop]);
           }
         }
       };
-      for (let i = 0; i < payload.length; i++) {
-        getProp(payload[i]);
-        storage_local.push(obj);
-        obj = [];
+      for (let i = 0; i < payload.response.length; i++) {
+        getProp(payload.response[i]);
+        storage_local.push(subarr);
+        subarr = [];
+
       }
 
       let el = Object.assign({}, state.tableFields);
       el.rows = state.static_headers;
       el.value = storage_local;
       el.isLoading = false;
-
+      el.options = payload.css ? payload.css.replace(/\s+/g, "").split(",", 3)
+      : [];
       state.tables.push(el);
-      console.log(el);
       state.isLoading = false;
     },
     addEmptyTable(state, payload) {
@@ -70,7 +71,6 @@ export default new Vuex.Store({
         .replace(/\s+/g, "")
         .split(",");
       headers.push("Actions");
-
       let arr = [];
       let arrIn = [];
       for (let i = 0; i < payload.rows; i++) {
@@ -85,7 +85,7 @@ export default new Vuex.Store({
       el.options = payload.css
         ? payload.css.replace(/\s+/g, "").split(",", 3)
         : [];
-
+console.log(el.options)
       state.tables.push(el);
     }
   },
@@ -99,12 +99,18 @@ export default new Vuex.Store({
         )
         .then(response => {
           console.log(response.data);
-          state.commit("addDefaultTable", response.data);
+          let data = {
+            css: payload.css,
+            response: response.data
+          }
+          state.commit("addDefaultTable", data);
         });
     }
   },
   getters: {
     getTables: state => state.tables,
-    getStaticHeaders: state => state.static_headers
+    getStaticHeaders: state => state.static_headers,
+    getisLoading: state => state.isLoading
+
   }
 });

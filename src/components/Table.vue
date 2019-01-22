@@ -1,13 +1,14 @@
 <template>
     <div class="hello">
-        <div  class="parent_table">
+        <div class="parent_table">
             <div class="div_for_align_boxes">
-                <table border="1" class="table">
-                    <tr >
-                        <td class="static_headers" v-for="(header,i) in headers" :key="i">{{ header }} </td>
+                <table v-for="(table,indexTabs) in tabs" :key="indexTabs" border="1" class="table">
+
+                    <tr :class="setCustomHeaders(indexTabs)">
+                        <td class="static_headers" v-for="(header,indexTable) in table.rows" :key="indexTable">{{ header }} </td>
                     </tr>
-                    <tr  v-for="(obj,i) in collection" :key="i">
-                        <td class="table_boxes" v-for="(props,i) in data(obj)" :key="i">{{ props }}</td>
+                    <tr :class="[setCustomTdEven(indexTabs), setCustomTdOdd(indexTabs) ]" v-for="(obj,b) in table.value" :key="b">
+                        <td class="table_boxes" v-for="(props,i) in obj" :key="i">{{ props}}</td>
                         <td class="no-wrap-section">
                             <close-icon/>
                             <up-icon/>
@@ -19,11 +20,11 @@
             <div class="table_all_controls">
                 <div class="table_btn_controls">
                     <!-- <button>Удалить таблицу</button>
-                    <button @click="cleanTable">Очистить таблицу</button>
-                    <button id="show-modal" @click="saveJson = true">Получить таблицу</button> -->
+                                    <button @click="cleanTable">Очистить таблицу</button>
+                                    <button id="show-modal" @click="saveJson = true">Получить таблицу</button> -->
                 </div>
 
-                <div  class="pagination_controls">
+                <div class="pagination_controls">
                     <button v-for="p in pagination.pages" :key="p.id" @click.prevent="setPage(p)">{{ p }}</button>
                 </div>
             </div>
@@ -50,7 +51,8 @@
     }
 
     .static_headers,
-    .table_boxes {
+    .table_boxes
+    {
         padding: 10px;
         text-align: center;
     }
@@ -75,6 +77,6 @@
     }
 
     .td-odd:nth-child(odd) {
-        background: #FFF;
+        background: rgb(216, 30, 30);
     }
 </style>
