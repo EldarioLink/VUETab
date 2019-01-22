@@ -1,11 +1,16 @@
 import { mapGetters } from "vuex";
 export default {
-  props: ["tables"],
+  props: ['table', 'tableIndex'],
 
   data() {
     return {
       perPage: 10,
-      pagination: {}
+      pagination: {},
+      tableData: {
+        values: [],
+        page: 1,
+        rows: [],
+      }
     };
   },
   computed: {
@@ -40,18 +45,17 @@ export default {
         pages: _.range(1, Math.ceil(totalItems / this.perPage) + 1)
       };
     },
-    setCustomHeaders(i) {
-      console.log(i);
-      return this.tables[i].options[0];
+    setCustomHeaders() {
+      return this.table.options[0];
     },
-    setCustomTdEven(i) {
-      return this.tables[i].options[1];
+    setCustomTdEven() {
+      return this.table.options[1];
     },
-    setCustomTdOdd(i) {
-      return this.tables[i].options[2];
+    setCustomTdOdd() {
+      return this.table.options[2];
     }
   },
  mounted() {
-    this.setPage(this.tables[0].value.length  , 1);
+    this.setPage(this.table.value.length  , 1);
   }
 };

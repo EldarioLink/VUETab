@@ -1,13 +1,13 @@
 <template>
     <div class="hello">
-        <div class="parent_table" v-for="(table,indexTabs) in tabs" :key="indexTabs">
+        <div class="parent_table">
             <div class="div_for_align_boxes">
                 <table border="1" class="table">
 
-                    <tr :class="setCustomHeaders(indexTabs)">
+                    <tr :class="setCustomHeaders()">
                         <td class="static_headers" v-for="(header,indexTable) in table.rows" :key="indexTable">{{ header }} </td>
                     </tr>
-                    <tr :class="[setCustomTdEven(indexTabs), setCustomTdOdd(indexTabs) ]" v-for="(obj,b) in collection(table.value)" :key="b">
+                    <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,b) in collection(table.value)" :key="b">
                         <td class="table_boxes" v-for="(props,i) in obj" :key="i">{{ props}}</td>
                         <td class="no-wrap-section">
                             <close-icon/>
@@ -19,8 +19,8 @@
             </div>
             <div class="table_all_controls">
                 <div class="table_btn_controls">
-                    <!-- <button>Удалить таблицу</button>
-                    <button @click="cleanTable">Очистить таблицу</button>
+                    <button>Удалить таблицу</button>
+                    <!-- <button @click="cleanTable">Очистить таблицу</button>
                     <button id="show-modal" @click="saveJson = true">Получить таблицу</button> -->
                 </div>
 
@@ -57,6 +57,7 @@
     }
 
     .table_all_controls {
+        margin-top:50px;
         align-items:  flex-end;
         display: flex;
         justify-content: space-around;

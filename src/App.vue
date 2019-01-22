@@ -3,7 +3,7 @@
     <button @click.prevent="showTab" class="btn_add_table">Добавить таблицу</button>
 
     <addtable @close="showTab" v-if="showModal"></addtable>
-    <tab v-if="tableExist" :tables="tables"></tab>
+    <tab class="tables" v-for="(table, index) in tables" :table="table" :tableIndex="index" :key="index"></tab>
     <div class="vld-parent">
       <loading :active.sync="isLoading"></loading>
     </div>
@@ -34,9 +34,6 @@
         getStaticHeaders: 'static_headers',
         Loading: 'getisLoading',
       }),
-      tableExist() {
-        return this.tables.length != 0
-      },
       isLoading() {
         return this.Loading
       }
@@ -53,5 +50,8 @@
     line-height: 30px;
     box-sizing: border-box;
     margin-bottom: 20px;
+  }
+  .tables{
+    margin-top: 40px
   }
 </style>
