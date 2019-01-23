@@ -33,31 +33,10 @@ export default new Vuex.Store({
     IS_LOADING(state, payload) {
       state.isLoading = payload;
     },
-
     addDefaultTable(state, payload) {
-      //избавляемся от вложенных объектов
-      var storage_local = [];
-      var subarr = [];
-
-      var getProp = o => {
-        for (var prop in o) {
-          if (typeof o[prop] === "object") {
-            getProp(o[prop]);
-          } else {
-            subarr.push(o[prop]);
-          }
-        }
-      };
-      for (let i = 0; i < payload.response.length; i++) {
-        getProp(payload.response[i]);
-        storage_local.push(subarr);
-        subarr = [];
-
-      }
-
       let el = Object.assign({}, state.tableFields);
       el.rows = state.static_headers;
-      el.value = storage_local;
+      el.value = payload.response;
       el.isLoading = false;
       el.options = payload.css ? payload.css.replace(/\s+/g, "").split(",", 3)
       : [];
@@ -85,8 +64,10 @@ export default new Vuex.Store({
       el.options = payload.css
         ? payload.css.replace(/\s+/g, "").split(",", 3)
         : [];
-console.log(el.options)
       state.tables.push(el);
+    },
+    CLEAN_TABLE(state, payload){
+      state.tables[payload] = [];
     }
   },
 

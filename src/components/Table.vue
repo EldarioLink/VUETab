@@ -8,7 +8,11 @@
                         <td class="static_headers" v-for="(header,indexTable) in table.rows" :key="indexTable">{{ header }} </td>
                     </tr>
                     <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,b) in collection(table.value)" :key="b">
-                        <td class="table_boxes" v-for="(props,i) in obj" :key="i">{{ props}}</td>
+
+                        <td class="table_boxes" v-for="(props,i) in parse(obj)" :key="i">
+                            {{ props}}
+                        </td>
+
                         <td class="no-wrap-section">
                             <close-icon/>
                             <up-icon/>
@@ -20,15 +24,15 @@
             <div class="table_all_controls">
                 <div class="table_btn_controls">
                     <button>Удалить таблицу</button>
-                    <!-- <button @click="cleanTable">Очистить таблицу</button>
-                            <button id="show-modal" @click="saveJson = true">Получить таблицу</button> -->
+                    <button @click="cleanTable(tableIndex)">Очистить таблицу</button>
+                    <button id="show-modal" @click="saveTab = true">Получить таблицу</button>
                 </div>
-
                 <div class="pagination_controls">
                     <button v-for="p in pagination.pages" :key="p.id" @click.prevent="setPage(table.value.length,p)">{{ p }}</button>
                 </div>
             </div>
         </div>
+        <popup v-if="saveTab" :table="this.tableData.value" @close="saveTab=false"></popup>
     </div>
 </template>
 
