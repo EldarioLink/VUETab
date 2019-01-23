@@ -7,7 +7,7 @@
             <textarea class="textfield" cols="50" rows="10" v-model="json" readonly>  </textarea>
             <div class="modal-footer">
               <button @click="copyToBuffer">Скопировать</button>
-              <button @click="readBuffer">Восстановить</button>
+              <button @click="readBuffer(tableIndex)">Восстановить</button>
               <button class="modal-default-button" @click="$emit('close')">
      OK
    </button>

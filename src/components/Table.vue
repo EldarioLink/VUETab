@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <popup v-if="saveTab" :table="this.tableData.value" @close="saveTab=false"></popup>
+        <popup v-if="saveTab" :table="this.table.value" :tableIndex="tableIndex" @close="saveTab=false"></popup>
     </div>
 </template>
 

@@ -11,8 +11,9 @@ export default new Vuex.Store({
       value: [],
       page: 1,
       rows: [],
-      options: [],
+      options: []
     },
+    gapJson: [],
     tables: [],
     isLoading: false,
     static_headers: [
@@ -27,24 +28,32 @@ export default new Vuex.Store({
       "address.zip",
       "description",
       "Actions"
-    ],
+    ]
   },
   mutations: {
     IS_LOADING(state, payload) {
       state.isLoading = payload;
     },
+
+     //
+    GAP_JSON(state, payload) {
+      state.gapJson = payload;
+    },
+
+    // Создание пользовательской таблицы
     addDefaultTable(state, payload) {
       let el = Object.assign({}, state.tableFields);
       el.rows = state.static_headers;
       el.value = payload.response;
       el.isLoading = false;
-      el.options = payload.css ? payload.css.replace(/\s+/g, "").split(",", 3)
-      : [];
+      el.options = payload.css
+        ? payload.css.replace(/\s+/g, "").split(",", 3)
+        : [];
       state.tables.push(el);
       state.isLoading = false;
     },
+    // Создание пользовательской таблицы
     addEmptyTable(state, payload) {
-      // удаление пробелов и преобразование в массив
       let headers = payload.headers
         .toString()
         .replace(/\s+/g, "")
@@ -52,7 +61,7 @@ export default new Vuex.Store({
       headers.push("Actions");
       let arr = [];
       let arrIn = [];
-      for (let i = 0; i < payload.rows; i++) {
+      for (let index = 0; index < payload.rows; index++) {
         for (let i = 0; i < headers.length - 1; i++) {
           arrIn[i] = "";
         }
@@ -66,12 +75,18 @@ export default new Vuex.Store({
         : [];
       state.tables.push(el);
     },
-    CLEAN_TABLE(state, payload){
-      state.tables[payload] = [];
+    // Очистка таблицы
+    CLEAN_TABLE(state, payload) {
+      state.tables[payload].value = [];
+    },
+    // Восстановление таблицы
+    RECOVERY_TABLE(state, payload) {
+      state.tables[payload].value = JSON.parse(state.gapJson);
     }
   },
 
   actions: {
+    // Создание таблицы по умолчанию
     addDefaultTable(state, payload) {
       state.commit("IS_LOADING", true);
       axios
@@ -83,7 +98,7 @@ export default new Vuex.Store({
           let data = {
             css: payload.css,
             response: response.data
-          }
+          };
           state.commit("addDefaultTable", data);
         });
     }
@@ -91,7 +106,7 @@ export default new Vuex.Store({
   getters: {
     getTables: state => state.tables,
     getStaticHeaders: state => state.static_headers,
-    getisLoading: state => state.isLoading
-
+    getisLoading: state => state.isLoading,
+    getgapJson: state => state.gapJson
   }
 });

@@ -1,35 +1,44 @@
+import { mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   props: {
     table: {
       type: Array
+    },
+    tableIndex: {
+      type: Number
     }
   },
   data() {
     return {
-      empty: [],
       json: null
     };
   },
+  computed: {
+    ...mapGetters(["getgapJson"])
+  },
   methods: {
+    ...mapMutations(["GAP_JSON", "RECOVERY_TABLE"]),
     //  копирование данных в буфер обмена
     copyToBuffer() {
-      const inputEl = document.querySelector(".textfield");
-      const inputValue = inputEl.value.trim();
-      if (inputValue)
-        navigator.clipboard.writeText(inputValue);
-      },
-
+      const elTag = document.querySelector(".textfield");
+      const outputJSON = elTag.value.trim();
+      if (outputJSON) {
+        navigator.clipboard.writeText(outputJSON);
+        this.GAP_JSON(outputJSON);
+      }
+    },
     // восстановление данных из буфера обмена
-    readBuffer() {
+    readBuffer(index) {
       navigator.clipboard.readText().then(text => {
-        if (_.isEqual(text, this.json)) {
+        if (_.isEqual(text, this.getgapJson)) {
+          this.RECOVERY_TABLE(index);
         } else {
           document.querySelector(".textfield").value =
             "Не правильный JSON объект ";
-          console.log("copyed" + text);
         }
       });
-    },
+    }
   },
   mounted() {
     this.$nextTick(() => {
