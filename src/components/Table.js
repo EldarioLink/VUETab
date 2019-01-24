@@ -22,8 +22,9 @@ export default {
   },
   methods: {
     ...mapMutations([
-      "CLEAN_TABLE" ,
-      "REMOVE_TABLE"//
+      "CLEAN_TABLE",
+      "REMOVE_TABLE",
+      "ADD_ROW" //
     ]),
     // Избавимся от вложенных элементов
     parse(parseObj) {
@@ -45,6 +46,7 @@ export default {
     },
     // Данные для пагинаций
     setPage(length, page) {
+      this.tableData.page = page;
       this.pagination = this.paginator(length, page);
     },
     paginate(array) {
@@ -83,8 +85,17 @@ export default {
       // this.table.value = [];
       this.CLEAN_TABLE(index);
     },
-    removeTable(index){
-     this.REMOVE_TABLE(index)
+    removeTable(index) {
+      this.REMOVE_TABLE(index);
+    },
+    addRow(index,indexRow) {
+      let indexesEl = {
+       indexTable:  index,
+       indexRow: indexRow,
+       page: this.tableData.page
+      }
+      this.ADD_ROW(indexesEl);
+      this.setPage(this.table.value.length, indexesEl.page);
     }
   },
   mounted() {

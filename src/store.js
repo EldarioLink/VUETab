@@ -45,6 +45,7 @@ export default new Vuex.Store({
       let el = Object.assign({}, state.tableFields);
       el.rows = state.static_headers;
       el.value = payload.response;
+      console.log(payload.response);
       el.isLoading = false;
       el.options = payload.css
         ? payload.css.replace(/\s+/g, "").split(",", 3)
@@ -86,6 +87,17 @@ export default new Vuex.Store({
     // Удаление таблицы
     REMOVE_TABLE(state, payload) {
       state.tables.splice(payload, 1);
+    },
+    ADD_ROW(state, payload) {  // Как сократить код и методы (){ } a ne function: {} let arrIn viden
+let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
+      let arrEl = [];
+      let arrIn = [];
+      for (let i = 1; i < state.tables[payload.indexTable].rows.length; i++) {
+        arrIn[i] = "";
+      }
+      arrEl.push(arrIn)
+      state.tables[payload.indexTable].value.splice(indexID, 0, arrEl);
+
     }
   },
   actions: {

@@ -14,9 +14,7 @@
                         </td>
 
                         <td class="no-wrap-section">
-                            <close-icon/>
-                            <up-icon/>
-                            <down-icon/>
+                          <div  @click="addRow(tableIndex,b)"><down-icon/></div>
                         </td>
                     </tr>
                 </table>
