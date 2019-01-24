@@ -23,7 +23,7 @@
             </div>
             <div class="table_all_controls">
                 <div class="table_btn_controls">
-                    <button>Удалить таблицу</button>
+                    <button @click="removeTable(tableIndex)">Удалить таблицу</button>
                     <button @click="cleanTable(tableIndex)">Очистить таблицу</button>
                     <button id="show-modal" @click="saveTab = true">Получить таблицу</button>
                 </div>

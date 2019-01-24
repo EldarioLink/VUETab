@@ -35,7 +35,7 @@ export default new Vuex.Store({
       state.isLoading = payload;
     },
 
-     //
+    //
     GAP_JSON(state, payload) {
       state.gapJson = payload;
     },
@@ -82,9 +82,12 @@ export default new Vuex.Store({
     // Восстановление таблицы
     RECOVERY_TABLE(state, payload) {
       state.tables[payload].value = JSON.parse(state.gapJson);
+    },
+    // Удаление таблицы
+    REMOVE_TABLE(state, payload) {
+      state.tables.splice(payload, 1);
     }
   },
-
   actions: {
     // Создание таблицы по умолчанию
     addDefaultTable(state, payload) {

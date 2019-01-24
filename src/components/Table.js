@@ -22,7 +22,8 @@ export default {
   },
   methods: {
     ...mapMutations([
-      "CLEAN_TABLE" //
+      "CLEAN_TABLE" ,
+      "REMOVE_TABLE"//
     ]),
     // Избавимся от вложенных элементов
     parse(parseObj) {
@@ -79,8 +80,11 @@ export default {
 
     // Очистка таблицы
     cleanTable(index) {
-      this.table.value = [];
+      // this.table.value = [];
       this.CLEAN_TABLE(index);
+    },
+    removeTable(index){
+     this.REMOVE_TABLE(index)
     }
   },
   mounted() {

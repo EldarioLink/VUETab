@@ -2,10 +2,12 @@
   <div class="modal-mask">
     <div class="modal-wrapper">
       <div class="modal-container">
-        <p>
+        <span v-on:click="closePopup" class="closeBtn">&times;</span>
+        <p >
           Название заголовков (через запятую):
         </p>
         <input v-model="headers" class="inp" type="text">
+
         <p>
           Количество строк в таблице (через запятую):
         </p>
@@ -15,8 +17,8 @@
         </p>
         <input v-model="css_table" class="inp" type="text">
         <button class="modal-default-button" @click="checkInputs">
-                           OK
-                        </button>
+                           Добавить
+                          </button>
       </div>
     </div>
   </div>
@@ -55,7 +57,6 @@
     display: table-cell;
     vertical-align: middle;
   }
-
   .modal-container {
     width: 500px;
     margin: 0px auto;
@@ -67,15 +68,20 @@
     font-family: Helvetica, Arial, sans-serif;
     border-radius: 5px;
   }
-
   .modal-default-button {
     float: right;
+    height: 30px;
   }
-
   .modal-enter .modal-container,
   .modal-leave-active .modal-container {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
   }
+  .closeBtn{
+    float:right;
+    font-size:25px;
+   cursor: pointer;
+  }
+
 </style>
 

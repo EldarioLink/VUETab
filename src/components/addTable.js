@@ -15,7 +15,9 @@ export default {
     ...mapActions({
       addDefaultTable: "addDefaultTable"
       }),
-
+      closePopup: function () {
+        this.$emit('close');
+      },
     checkInputs() {
       // Если есть ли заголовки таблицы, то создаем пользо-ую таблицу
       if (this.headers ) {
@@ -33,5 +35,5 @@ export default {
       }
       this.$emit('close');
     },
-  }
+  },
 };

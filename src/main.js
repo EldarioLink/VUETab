@@ -18,6 +18,16 @@ Vue.component("close-icon", Close);
 Vue.component("down-icon", chevronDown);
 Vue.use(_);
 
+Vue.directive('click-outside', {
+  bind(el, binding) {
+      el.addEventListener('click', e => e.stopPropagation());
+      document.body.addEventListener('click', binding.value);
+  },
+  unbind(el, binding) {
+      document.body.removeEventListener('click', binding.value);
+  }
+});
+
 Vue.component("addtable", addTable);
 Vue.component("tab", tab);
 Vue.config.productionTip = false;
