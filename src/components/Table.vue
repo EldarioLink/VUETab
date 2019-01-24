@@ -7,14 +7,16 @@
                     <tr :class="setCustomHeaders()">
                         <td class="static_headers" v-for="(header,indexTable) in table.rows" :key="indexTable">{{ header }} </td>
                     </tr>
-                    <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,b) in collection(table.value)" :key="b">
+                    <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in collection(table.value)" :key="rowIndex">
 
-                        <td class="table_boxes" v-for="(props,i) in parse(obj)" :key="i">
-                            {{ props}}
+                        <td class="table_boxes" v-for="(props,colIndex) in parse(obj)" :key="colIndex" v-on:dblclick="editField(rowIndex,colIndex)">
+                            <input v-if="isEditing(rowIndex,colIndex)">
+                            <template v-else> {{ props}}
+</template>
                         </td>
 
                         <td class="no-wrap-section">
-                            <div class="addRow-icon" @click="addRow(tableIndex,b)">
+                            <div class="addRow-icon" @click.prevent="addRow(tableIndex,rowIndex)">
                                 <down-icon/>
                             </div>
                         </td>

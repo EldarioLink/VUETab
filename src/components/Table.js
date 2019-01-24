@@ -9,7 +9,14 @@ export default {
       saveTab: false,
       tableData: {
         page: 1,
+        col: undefined,
+        row: undefined
       },
+      edit: {
+        row: undefined,
+        col: undefined,
+        value: undefined
+      }
     };
   },
   computed: {
@@ -37,7 +44,17 @@ export default {
         }
       };
       getProp(parseObj);
+      this.edit.value = subarr;
       return subarr;
+    },
+    isEditing(rowIndex, colIndex) {
+       return rowIndex == this.edit.row && colIndex == this.edit.col
+    },
+    editField(row, col) {
+      this.edit.row = row;
+      this.edit.col = col;
+      // Избавимся от вложенных объектов, для редактирования
+      this.edit.value = this.parse(this.table.value);
     },
     collection(value) {
       return this.paginate(value);
@@ -48,11 +65,11 @@ export default {
       this.pagination = this.paginator(length, page);
     },
 
-   checkActivePage(page) {
-     if (page == this.tableData.page) {
-       return 'active';
-     }
-   },
+    checkActivePage(page) {
+      if (page == this.tableData.page) {
+        return "active";
+      }
+    },
     paginate(array) {
       return _.slice(
         array,
@@ -91,12 +108,12 @@ export default {
     removeTable(index) {
       this.REMOVE_TABLE(index);
     },
-    addRow(index,indexRow) {
+    addRow(index, indexRow) {
       let indexesEl = {
-       indexTable:  index,
-       indexRow: indexRow,
-       page: this.tableData.page
-      }
+        indexTable: index,
+        indexRow: indexRow,
+        page: this.tableData.page
+      };
       this.ADD_ROW(indexesEl);
       this.setPage(this.table.value.length, indexesEl.page);
     }
