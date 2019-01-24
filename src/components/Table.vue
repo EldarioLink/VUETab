@@ -14,7 +14,9 @@
                         </td>
 
                         <td class="no-wrap-section">
-                          <div  @click="addRow(tableIndex,b)"><down-icon/></div>
+                            <div class="addRow-icon" @click="addRow(tableIndex,b)">
+                                <down-icon/>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -26,7 +28,7 @@
                     <button id="show-modal" @click="saveTab = true">Получить таблицу</button>
                 </div>
                 <div class="pagination_controls">
-                    <button v-for="p in pagination.pages" :key="p.id" @click.prevent="setPage(table.value.length,p)">{{ p }}</button>
+                    <button v-for="p in pagination.pages" :class="checkActivePage(p)" :key="p" @click.prevent="setPage(table.value.length,p)">{{ p }}</button>
                 </div>
             </div>
         </div>
@@ -90,5 +92,13 @@
 
     .td-odd:nth-child(odd) {
         background: #CCFFFF;
+    }
+
+    .addRow-icon {
+        cursor: pointer;
+    }
+
+    .active {
+        background: #FF6633;
     }
 </style>

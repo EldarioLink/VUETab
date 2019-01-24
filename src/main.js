@@ -1,7 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import store from "./store";
-import chevronDown from "vue-material-design-icons/ChevronDown.vue";
+import Plus from "vue-material-design-icons/Plus.vue";
 import addTable from "./components/addTable.vue";
 import tab from "./components/Table.vue";
 import popup from "./components/popup.vue";
@@ -11,7 +11,7 @@ import "vue-loading-overlay/dist/vue-loading.css";
 
 Vue.component("popup", popup);
 Vue.component("Loading", Loading);
-Vue.component("down-icon", chevronDown);
+Vue.component("down-icon", Plus);
 Vue.use(_);
 
 Vue.directive('click-outside', {

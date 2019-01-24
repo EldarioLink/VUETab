@@ -45,7 +45,6 @@ export default new Vuex.Store({
       let el = Object.assign({}, state.tableFields);
       el.rows = state.static_headers;
       el.value = payload.response;
-      console.log(payload.response);
       el.isLoading = false;
       el.options = payload.css
         ? payload.css.replace(/\s+/g, "").split(",", 3)
@@ -109,7 +108,6 @@ let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
           "http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&adress={addressObject}&description={lorem|32}"
         )
         .then(response => {
-          console.log(response.data);
           let data = {
             css: payload.css,
             response: response.data

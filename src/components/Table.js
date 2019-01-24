@@ -8,10 +8,8 @@ export default {
       pagination: {},
       saveTab: false,
       tableData: {
-        values: [],
         page: 1,
-        rows: []
-      }
+      },
     };
   },
   computed: {
@@ -49,6 +47,12 @@ export default {
       this.tableData.page = page;
       this.pagination = this.paginator(length, page);
     },
+
+   checkActivePage(page) {
+     if (page == this.tableData.page) {
+       return 'active';
+     }
+   },
     paginate(array) {
       return _.slice(
         array,
@@ -82,7 +86,6 @@ export default {
 
     // Очистка таблицы
     cleanTable(index) {
-      // this.table.value = [];
       this.CLEAN_TABLE(index);
     },
     removeTable(index) {
