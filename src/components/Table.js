@@ -19,6 +19,7 @@ export default {
         value: []
       },
       inputText: null,
+      isSorting: false
     };
   },
   computed: {
@@ -64,7 +65,6 @@ export default {
       this.IS_EDIT_TABLE(true);
     },
     inputSaveText(rowIndex, colIndex) {
-      console.log("heh")
       this.edit.value = _.cloneDeep(this.table.value);
       var Gap = _.cloneDeep(this.table.value[rowIndex]);
       let key = this.table.rows[colIndex];
@@ -89,19 +89,22 @@ export default {
         tableIndex: this.tableIndex,
         inputText: this.edit.value[rowIndex]
       };
-      console.log(data.inputText)
       this.INPUT_EDIT(data);
       this.inputText = "";
       this.IS_EDIT_TABLE(false);
       Gap = null;
     },
-//     sortElements(){
-//  for(let i; i<this.table.value.length;i++){
-//    this.tableData
-
-//  }
-//     },
-    inputEditEsc( ) {
+    sortElements() {
+      if (!this.isSorting) {
+         var sortMethod = (firstId, secondId) => {
+          return firstId.id - secondId.id;
+        }
+        this.tableData.value.sort(sortMethod);
+        this.isSorting = true
+      }
+      this.tableData.value.reverse()
+    },
+    inputEditEsc() {
       this.inputText = "";
       this.IS_EDIT_TABLE(false);
     },
@@ -113,7 +116,6 @@ export default {
       this.tableData.page = page;
       this.pagination = this.paginator(length, page);
     },
-
     checkActivePage(page) {
       if (page == this.tableData.page) {
         return "active";
@@ -149,7 +151,6 @@ export default {
       let copy = Object.assign({}, this.table);
       this.tableData = copy;
     },
-
     // Очистка таблицы
     cleanTable(index) {
       this.CLEAN_TABLE(index);
@@ -165,7 +166,7 @@ export default {
       };
       this.ADD_ROW(indexesEl);
       this.setPage(this.table.value.length, indexesEl.page);
-    },
+    }
   },
   mounted() {
     this.copyTable();
