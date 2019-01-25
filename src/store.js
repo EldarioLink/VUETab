@@ -22,10 +22,10 @@ export default new Vuex.Store({
       "lastName",
       "email",
       "phone",
-      "address.streetAddress",
-      "address.city",
-      "address.state",
-      "address.zip",
+      "adress.streetAddress",
+      "adress.city",
+      "adress.state",
+      "adress.zip",
       "description",
       "Actions"
     ]
@@ -87,16 +87,27 @@ export default new Vuex.Store({
     REMOVE_TABLE(state, payload) {
       state.tables.splice(payload, 1);
     },
-    ADD_ROW(state, payload) {  // Как сократить код и методы (){ } a ne function: {} let arrIn viden
-let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
-      let arrEl = [];
+    ADD_ROW(state, payload) {
+      // Как сократить код и методы (){ } a ne function: {} let arrIn viden, несколько v-on на элементе и сорктатить inputsavetext
+      let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
+
       let arrIn = [];
-      for (let i = 1; i < state.tables[payload.indexTable].rows.length; i++) {
+      for (
+        let i = 0;
+        i < state.tables[payload.indexTable].rows.length - 1;
+        i++
+      ) {
         arrIn[i] = "";
       }
-      arrEl.push(arrIn)
-      state.tables[payload.indexTable].value.splice(indexID, 0, arrEl);
 
+      state.tables[payload.indexTable].value.splice(indexID, 0, arrIn);
+    },
+    INPUT_EDIT(state, payload) {
+      state.tables[payload.tableIndex].value.splice(
+        payload.rowIndex,
+        1,
+        payload.inputText
+      );
     }
   },
   actions: {

@@ -10,7 +10,7 @@
                     <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in collection(table.value)" :key="rowIndex">
 
                         <td class="table_boxes" v-for="(props,colIndex) in parse(obj)" :key="colIndex" v-on:dblclick="editField(rowIndex,colIndex)">
-                            <input v-if="isEditing(rowIndex,colIndex)">
+                            <input @keyup.enter="inputSaveText(rowIndex,colIndex)" @blur="inputSaveText(rowIndex,colIndex)" autofocus v-model="inputText" v-if="isEditing(rowIndex,colIndex)">
                             <template v-else> {{ props}}
 </template>
                         </td>
