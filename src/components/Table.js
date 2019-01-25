@@ -2,7 +2,6 @@ import { mapMutations } from "vuex";
 import { mapGetters } from "vuex";
 export default {
   props: ["table", "tableIndex"],
-
   data() {
     return {
       perPage: 10,
@@ -18,16 +17,11 @@ export default {
         col: null,
         value: []
       },
-      inputText: null,
-      isSorting: false
+      inputText: null
     };
   },
   computed: {
-    ...mapGetters(["getIsEditTable"]),
-    // Возвратим заголовки таблицы
-    tabs() {
-      return this.tables;
-    }
+    ...mapGetters(["getIsEditTable" ])
   },
   methods: {
     ...mapMutations([
@@ -35,7 +29,10 @@ export default {
       "REMOVE_TABLE",
       "ADD_ROW",
       "INPUT_EDIT",
-      "IS_EDIT_TABLE"
+      "IS_EDIT_TABLE",
+      "SORTING_TABLE",
+      "REVERSE_TABLE",
+      "IS_SORTING"
     ]),
     // Избавимся от вложенных элементов
     parse(parseObj) {
@@ -70,7 +67,7 @@ export default {
       let key = this.table.rows[colIndex];
       if (Object.prototype.toString.call(Gap) == "[object Object]") {
         if (~key.indexOf(".")) {
-          var arr = key.split(".");
+          let arr = key.split(".");
           Gap.adress[arr[1]] = this.inputText;
         } else {
           Gap[key] = this.inputText;
@@ -85,24 +82,14 @@ export default {
       this.edit.value[rowIndex] = Gap;
       let data = {
         rowIndex: rowIndex,
-        colIndex: colIndex,
         tableIndex: this.tableIndex,
         inputText: this.edit.value[rowIndex]
       };
       this.INPUT_EDIT(data);
+      this.IS_SORTING(false);
       this.inputText = "";
       this.IS_EDIT_TABLE(false);
       Gap = null;
-    },
-    sortElements() {
-      if (!this.isSorting) {
-         var sortMethod = (firstId, secondId) => {
-          return firstId.id - secondId.id;
-        }
-        this.tableData.value.sort(sortMethod);
-        this.isSorting = true
-      }
-      this.tableData.value.reverse()
     },
     inputEditEsc() {
       this.inputText = "";
@@ -166,6 +153,13 @@ export default {
       };
       this.ADD_ROW(indexesEl);
       this.setPage(this.table.value.length, indexesEl.page);
+    },
+    reverseTable(indexTd) {
+      let data = {
+        index: indexTd,
+        tableIndex: this.tableIndex
+      };
+      this.REVERSE_TABLE(data);
     }
   },
   mounted() {

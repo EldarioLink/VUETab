@@ -5,7 +5,7 @@
                 <table class="table" border="1">
 
                     <tr  :class="setCustomHeaders()">
-                        <td class="static_headers" @click="sortElements()" v-for="(header,indexTable) in table.rows" :key="indexTable">{{ header }} </td>
+                        <td class="static_headers" @click="reverseTable(indexCol)" v-for="(header,indexCol) in table.rows" :key="indexCol">{{ header }} </td>
                     </tr>
                     <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in collection(table.value)" :key="rowIndex">
 
@@ -103,7 +103,9 @@
     .addRow-icon {
         cursor: pointer;
     }
-
+td:hover{
+    cursor: pointer;
+}
     .active {
         background: #FF6633;
     }

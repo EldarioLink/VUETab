@@ -29,7 +29,8 @@ export default new Vuex.Store({
       "description",
       "Actions"
     ],
-    isEditTable: false
+    isEditTable: false,
+    isSorting: false
   },
   mutations: {
     IS_LOADING(state, payload) {
@@ -40,6 +41,9 @@ export default new Vuex.Store({
     },
     GAP_JSON(state, payload) {
       state.gapJson = payload;
+    },
+    IS_SORTING(state, payload) {
+      state.isSorting = payload;
     },
 
     // Создание пользовательской таблицы
@@ -110,6 +114,16 @@ export default new Vuex.Store({
         1,
         payload.inputText
       );
+    },
+    REVERSE_TABLE(state, payload) {
+      if (!state.isSorting) {
+        var sortMethod = (firstId, secondId) => {
+          return firstId.id - secondId.id;
+        };
+        state.tables[payload.tableIndex].value.sort(sortMethod);
+      }
+      state.tables[payload.tableIndex].value.reverse();
+      state.isSorting = true;
     }
   },
   actions: {
@@ -134,6 +148,7 @@ export default new Vuex.Store({
     getStaticHeaders: state => state.static_headers,
     getisLoading: state => state.isLoading,
     getgapJson: state => state.gapJson,
-    getIsEditTable: state => state.isEditTable
+    getIsEditTable: state => state.isEditTable,
+    getIsSorting: state => state.isSorting
   }
 });
