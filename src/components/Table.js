@@ -1,4 +1,5 @@
 import { mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   props: ["table", "tableIndex"],
 
@@ -18,17 +19,23 @@ export default {
         value: []
       },
       inputText: null,
-      iseditNow: false
     };
   },
   computed: {
+    ...mapGetters(["getIsEditTable"]),
     // Возвратим заголовки таблицы
     tabs() {
       return this.tables;
     }
   },
   methods: {
-    ...mapMutations(["CLEAN_TABLE", "REMOVE_TABLE", "ADD_ROW", "INPUT_EDIT"]),
+    ...mapMutations([
+      "CLEAN_TABLE",
+      "REMOVE_TABLE",
+      "ADD_ROW",
+      "INPUT_EDIT",
+      "IS_EDIT_TABLE"
+    ]),
     // Избавимся от вложенных элементов
     parse(parseObj) {
       var subarr = [];
@@ -46,15 +53,18 @@ export default {
     },
     isEditing(rowIndex, colIndex) {
       return (
-        rowIndex == this.edit.row && colIndex == this.edit.col && this.iseditNow
+        rowIndex == this.edit.row &&
+        colIndex == this.edit.col &&
+        this.getIsEditTable
       );
     },
     editField(row, col) {
       this.edit.row = row;
       this.edit.col = col;
-      this.iseditNow = !this.iseditNow;
+      this.IS_EDIT_TABLE(true);
     },
     inputSaveText(rowIndex, colIndex) {
+      console.log("heh")
       this.edit.value = _.cloneDeep(this.table.value);
       var Gap = _.cloneDeep(this.table.value[rowIndex]);
       let key = this.table.rows[colIndex];
@@ -66,7 +76,7 @@ export default {
           Gap[key] = this.inputText;
         }
       } else {
-         //   Если двойной клик на ячейки Actions, то ничего не делаем
+        //   Если двойной клик на ячейки Actions, то ничего не делаем
         if (colIndex == 11) {
           return;
         }
@@ -79,10 +89,21 @@ export default {
         tableIndex: this.tableIndex,
         inputText: this.edit.value[rowIndex]
       };
+      console.log(data.inputText)
       this.INPUT_EDIT(data);
       this.inputText = "";
-      this.iseditNow = false;
+      this.IS_EDIT_TABLE(false);
       Gap = null;
+    },
+//     sortElements(){
+//  for(let i; i<this.table.value.length;i++){
+//    this.tableData
+
+//  }
+//     },
+    inputEditEsc( ) {
+      this.inputText = "";
+      this.IS_EDIT_TABLE(false);
     },
     collection(value) {
       return this.paginate(value);
@@ -144,7 +165,7 @@ export default {
       };
       this.ADD_ROW(indexesEl);
       this.setPage(this.table.value.length, indexesEl.page);
-    }
+    },
   },
   mounted() {
     this.copyTable();

@@ -4,13 +4,17 @@
             <div class="div_for_align_boxes">
                 <table class="table" border="1">
 
-                    <tr :class="setCustomHeaders()">
-                        <td class="static_headers" v-for="(header,indexTable) in table.rows" :key="indexTable">{{ header }} </td>
+                    <tr  :class="setCustomHeaders()">
+                        <td class="static_headers" @click="sortElements()" v-for="(header,indexTable) in table.rows" :key="indexTable">{{ header }} </td>
                     </tr>
                     <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in collection(table.value)" :key="rowIndex">
 
                         <td class="table_boxes" v-for="(props,colIndex) in parse(obj)" :key="colIndex" v-on:dblclick="editField(rowIndex,colIndex)">
-                            <input @keyup.enter="inputSaveText(rowIndex,colIndex)" @blur="inputSaveText(rowIndex,colIndex)" autofocus v-model="inputText" v-if="isEditing(rowIndex,colIndex)">
+                            <input @keyup.esc.prevent="inputEditEsc()"
+                            @keyup.enter.prevent="inputSaveText(rowIndex,colIndex)"
+                            @blur.prevent="inputSaveText(rowIndex,colIndex)"
+                            v-model="inputText"
+                            v-if="isEditing(rowIndex,colIndex)">
                             <template v-else> {{ props}}
 </template>
                         </td>

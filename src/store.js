@@ -17,7 +17,7 @@ export default new Vuex.Store({
     tables: [],
     isLoading: false,
     static_headers: [
-      "ID",
+      "id",
       "firstName",
       "lastName",
       "email",
@@ -28,14 +28,16 @@ export default new Vuex.Store({
       "adress.zip",
       "description",
       "Actions"
-    ]
+    ],
+    isEditTable: false
   },
   mutations: {
     IS_LOADING(state, payload) {
       state.isLoading = payload;
     },
-
-    //
+    IS_EDIT_TABLE(state, payload) {
+      state.isEditTable = payload;
+    },
     GAP_JSON(state, payload) {
       state.gapJson = payload;
     },
@@ -131,6 +133,7 @@ export default new Vuex.Store({
     getTables: state => state.tables,
     getStaticHeaders: state => state.static_headers,
     getisLoading: state => state.isLoading,
-    getgapJson: state => state.gapJson
+    getgapJson: state => state.gapJson,
+    getIsEditTable: state => state.isEditTable
   }
 });
