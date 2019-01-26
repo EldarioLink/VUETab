@@ -116,13 +116,25 @@ export default new Vuex.Store({
       );
     },
     REVERSE_TABLE(state, payload) {
-      if (!state.isSorting) {
-        var sortMethod = (firstId, secondId) => {
-          return firstId.id - secondId.id;
+      // if (!state.isSorting) {
+        var sortMethod = (a, b) => {
+          if (~payload.header.indexOf(".")) {
+            let arr = payload.header.split(".");
+           payload.header = arr[1];
+           console.log(a.adress[payload.header], "Hehe"+payload.header)
+            if(a.adress[payload.header]<b.adress[payload.header]) { return -1; }
+            if(a.adress[payload.header]>b.adress[payload.header]) { return 1; }
+            return 0;
+          }
+          else{
+            if(a[payload.header]<b[payload.header]) { return -1; }
+            if(a[payload.header]>b[payload.header]) { return 1; }
+            return 0;
+          }
         };
         state.tables[payload.tableIndex].value.sort(sortMethod);
-      }
-      state.tables[payload.tableIndex].value.reverse();
+      // }
+      // state.tables[payload.tableIndex].value.reverse();
       state.isSorting = true;
     }
   },

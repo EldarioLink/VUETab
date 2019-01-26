@@ -1,5 +1,6 @@
 import { mapMutations } from "vuex";
 import { mapGetters } from "vuex";
+import { delay } from "q";
 export default {
   props: ["table", "tableIndex"],
   data() {
@@ -17,11 +18,12 @@ export default {
         col: null,
         value: []
       },
-      inputText: null
+      inputText: null,
+      keypressed: true
     };
   },
   computed: {
-    ...mapGetters(["getIsEditTable" ])
+    ...mapGetters(["getIsEditTable"])
   },
   methods: {
     ...mapMutations([
@@ -61,6 +63,23 @@ export default {
       this.edit.col = col;
       this.IS_EDIT_TABLE(true);
     },
+    wrapperBlur(rowIndex,colIndex) {
+      if(this.keypressed){
+        this.inputSaveText(rowIndex,colIndex)
+      }
+      else{
+        this.keypressed = true
+      }
+    },
+    inputEditEsc() {
+      this.keypressed = false
+      this.inputText = "";
+      this.IS_EDIT_TABLE(false);
+    },
+    inputEnter(rowIndex, colIndex) {
+      this.keypressed = false
+      this.inputSaveText(rowIndex, colIndex)
+    },
     inputSaveText(rowIndex, colIndex) {
       this.edit.value = _.cloneDeep(this.table.value);
       var Gap = _.cloneDeep(this.table.value[rowIndex]);
@@ -90,10 +109,6 @@ export default {
       this.inputText = "";
       this.IS_EDIT_TABLE(false);
       Gap = null;
-    },
-    inputEditEsc() {
-      this.inputText = "";
-      this.IS_EDIT_TABLE(false);
     },
     collection(value) {
       return this.paginate(value);
@@ -154,10 +169,12 @@ export default {
       this.ADD_ROW(indexesEl);
       this.setPage(this.table.value.length, indexesEl.page);
     },
-    reverseTable(indexTd) {
+    reverseTable(indexTd, header) {
+      console.log(indexTd, header);
       let data = {
         index: indexTd,
-        tableIndex: this.tableIndex
+        tableIndex: this.tableIndex,
+        header: header
       };
       this.REVERSE_TABLE(data);
     }
