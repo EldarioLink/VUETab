@@ -5,7 +5,7 @@
                 <table class="table" border="1">
 
                     <tr  :class="setCustomHeaders()">
-                        <td class="static_headers" @click="reverseTable(indexCol,header)" v-for="(header,indexCol) in table.rows" :key="indexCol">{{ header }} </td>
+                        <td class="static_headers" @click="sortTable(indexCol,header)" v-for="(header,indexCol) in table.rows" :key="indexCol">{{ header }} </td>
                     </tr>
                     <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in collection(table.value)" :key="rowIndex">
 
@@ -14,7 +14,7 @@
                             @keyup.enter.prevent="inputEnter(rowIndex,colIndex)"
                             @blur.prevent="wrapperBlur(rowIndex,colIndex)"
                             v-model="inputText"
-                            v-if="isEditing(rowIndex,colIndex)">
+                            v-if="isEditing(rowIndex,colIndex)" autofocus>
                             <template v-else> {{ props}}
 </template>
                         </td>

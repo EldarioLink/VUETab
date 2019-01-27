@@ -30,18 +30,22 @@ export default new Vuex.Store({
       "Actions"
     ],
     isEditTable: false,
-    isSorting: [],
+    isSorting: []
   },
   mutations: {
+    // Индикатор загрузки
     IS_LOADING(state, payload) {
       state.isLoading = payload;
     },
+    // Редактируется ли таблица
     IS_EDIT_TABLE(state, payload) {
       state.isEditTable = payload;
     },
+    // Для хранения json перед восстановлением таблицы
     GAP_JSON(state, payload) {
       state.gapJson = payload;
     },
+    // Отсортирована ли колонка
     IS_SORTING(state, payload) {
       state.isSorting[payload.colIndex] = payload.state;
     },
@@ -93,21 +97,23 @@ export default new Vuex.Store({
     REMOVE_TABLE(state, payload) {
       state.tables.splice(payload, 1);
     },
+     // Добавление строки
     ADD_ROW(state, payload) {
-      // Как сократить код и методы (){ } a ne function: {} let arrIn viden, несколько v-on на элементе и сорктатить inputsavetext
       let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
-
-      let arrIn = [];
-      for (
-        let i = 0;
-        i < state.tables[payload.indexTable].rows.length - 1;
-        i++
-      ) {
-        arrIn[i] = "";
+      let arrIn = {};
+      for (let i = 0; i < payload.headers.length - 1; i++) {
+        if (~payload.headers[i].indexOf(".")) {
+          let arr = payload.headers[i].split(".");
+          if (!arrIn[arr[0]]) arrIn[arr[0]] = {};
+          arrIn[arr[0]][arr[1]] = '';
+        } else {
+          arrIn[payload.headers[i]] = '';
+        }
       }
-
+      state.isSorting[payload.index] = true;
       state.tables[payload.indexTable].value.splice(indexID, 0, arrIn);
     },
+      // Редактирование ячейки таблицы
     INPUT_EDIT(state, payload) {
       state.tables[payload.tableIndex].value.splice(
         payload.rowIndex,
@@ -115,9 +121,9 @@ export default new Vuex.Store({
         payload.inputText
       );
     },
-    REVERSE_TABLE(state, payload) {
+    // Редактирование ячейки таблицы
+    SORT_TABLE(state, payload) {
       if (!state.isSorting[payload.index] === true) {
-console.log("sorting")
         var sortMethod = (a, b) => {
           if (~payload.header.indexOf(".")) {
             let arr = payload.header.split(".");
@@ -130,7 +136,6 @@ console.log("sorting")
             }
             return 0;
           } else {
-            console.log(a[payload.header] ,b[payload.header])
             if (a[payload.header] < b[payload.header]) {
               return -1;
             }
@@ -140,9 +145,7 @@ console.log("sorting")
             return 0;
           }
         };
-
         state.tables[payload.tableIndex].value.sort(sortMethod);
-
         state.isSorting[payload.index] = true;
       } else {
         state.tables[payload.tableIndex].value.reverse();
