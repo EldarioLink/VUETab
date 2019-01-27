@@ -63,22 +63,21 @@ export default {
       this.edit.col = col;
       this.IS_EDIT_TABLE(true);
     },
-    wrapperBlur(rowIndex,colIndex) {
-      if(this.keypressed){
-        this.inputSaveText(rowIndex,colIndex)
-      }
-      else{
-        this.keypressed = true
+    wrapperBlur(rowIndex, colIndex) {
+      if (this.keypressed) {
+        this.inputSaveText(rowIndex, colIndex);
+      } else {
+        this.keypressed = true;
       }
     },
     inputEditEsc() {
-      this.keypressed = false
+      this.keypressed = false;
       this.inputText = "";
       this.IS_EDIT_TABLE(false);
     },
     inputEnter(rowIndex, colIndex) {
-      this.keypressed = false
-      this.inputSaveText(rowIndex, colIndex)
+      this.keypressed = false;
+      this.inputSaveText(rowIndex, colIndex);
     },
     inputSaveText(rowIndex, colIndex) {
       this.edit.value = _.cloneDeep(this.table.value);
@@ -105,7 +104,11 @@ export default {
         inputText: this.edit.value[rowIndex]
       };
       this.INPUT_EDIT(data);
-      this.IS_SORTING(false);
+      let sortData = {
+        colIndex: colIndex,
+        state: false
+      }
+      this.IS_SORTING(sortData);
       this.inputText = "";
       this.IS_EDIT_TABLE(false);
       Gap = null;
@@ -160,7 +163,7 @@ export default {
     removeTable(index) {
       this.REMOVE_TABLE(index);
     },
-    addRow(index, indexRow) {
+    addRow(index, indexRow ) {
       let indexesEl = {
         indexTable: index,
         indexRow: indexRow,
@@ -170,7 +173,6 @@ export default {
       this.setPage(this.table.value.length, indexesEl.page);
     },
     reverseTable(indexTd, header) {
-      console.log(indexTd, header);
       let data = {
         index: indexTd,
         tableIndex: this.tableIndex,

@@ -30,7 +30,7 @@ export default new Vuex.Store({
       "Actions"
     ],
     isEditTable: false,
-    isSorting: false
+    isSorting: [],
   },
   mutations: {
     IS_LOADING(state, payload) {
@@ -43,7 +43,7 @@ export default new Vuex.Store({
       state.gapJson = payload;
     },
     IS_SORTING(state, payload) {
-      state.isSorting = payload;
+      state.isSorting[payload.colIndex] = payload.state;
     },
 
     // Создание пользовательской таблицы
@@ -116,26 +116,37 @@ export default new Vuex.Store({
       );
     },
     REVERSE_TABLE(state, payload) {
-      // if (!state.isSorting) {
+      if (!state.isSorting[payload.index] === true) {
+console.log("sorting")
         var sortMethod = (a, b) => {
           if (~payload.header.indexOf(".")) {
             let arr = payload.header.split(".");
-           payload.header = arr[1];
-           console.log(a.adress[payload.header], "Hehe"+payload.header)
-            if(a.adress[payload.header]<b.adress[payload.header]) { return -1; }
-            if(a.adress[payload.header]>b.adress[payload.header]) { return 1; }
+            let key = arr[1];
+            if (a.adress[key] < b.adress[key]) {
+              return -1;
+            }
+            if (a.adress[key] > b.adress[key]) {
+              return 1;
+            }
             return 0;
-          }
-          else{
-            if(a[payload.header]<b[payload.header]) { return -1; }
-            if(a[payload.header]>b[payload.header]) { return 1; }
+          } else {
+            console.log(a[payload.header] ,b[payload.header])
+            if (a[payload.header] < b[payload.header]) {
+              return -1;
+            }
+            if (a[payload.header] > b[payload.header]) {
+              return 1;
+            }
             return 0;
           }
         };
+
         state.tables[payload.tableIndex].value.sort(sortMethod);
-      // }
-      // state.tables[payload.tableIndex].value.reverse();
-      state.isSorting = true;
+
+        state.isSorting[payload.index] = true;
+      } else {
+        state.tables[payload.tableIndex].value.reverse();
+      }
     }
   },
   actions: {
