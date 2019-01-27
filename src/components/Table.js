@@ -18,8 +18,15 @@ export default {
         col: null,
         value: []
       },
-      inputText: null,
-      keypressed: true
+      inputText: undefined,
+      keypressed: true,
+      selected: 'А',
+      options: [
+        { text: 'Один', value: 'А' },
+        { text: 'Два', value: 'Б' },
+        { text: 'Три', value: 'В' }
+      ],
+
     };
   },
   computed: {
@@ -64,7 +71,7 @@ export default {
       this.edit.col = col;
       this.IS_EDIT_TABLE(true);
     },
-    // Фокус уходит от элемента
+    // Фокус уходит от элементa,то сохраняем новое значение таблицы
     wrapperBlur(rowIndex, colIndex) {
       if (this.keypressed) {
         this.inputSaveText(rowIndex, colIndex);
@@ -87,6 +94,7 @@ export default {
     inputSaveText(rowIndex, colIndex) {
       this.edit.value = _.cloneDeep(this.table.value);
       var Gap = _.cloneDeep(this.table.value[rowIndex]);
+      console.log(Gap)
       let key = this.table.rows[colIndex];
       if (~key.indexOf(".")) {
         let arr = key.split(".");
@@ -94,6 +102,7 @@ export default {
       } else {
         Gap[key] = this.inputText;
       }
+      console.log(Gap)
       this.edit.value[rowIndex] = Gap;
       let data = {
         rowIndex: rowIndex,
@@ -192,6 +201,7 @@ export default {
     }
   },
   mounted() {
+
     this.copyTable();
     this.setPage(this.table.value.length, 1);
   }

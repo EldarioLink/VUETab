@@ -9,6 +9,14 @@ import _ from "vue-lodash";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
+
+
+Vue.directive('focus', {
+  inserted: function (el) {
+    el.focus()
+  }
+})
+
 Vue.component("popup", popup);
 Vue.component("Loading", Loading);
 Vue.component("down-icon", Plus);

@@ -1,20 +1,24 @@
 <template>
     <div>
         <div class="parent_table">
+            <div class="searchFields">
+                <input type="text">
+                <select v-model="selected">
+                  <option v-for="(option, choiseItem) in options" v-bind:value="option.value" :key="choiseItem" >
+                    {{ option.text }}
+                  </option>
+                </select>
+            </div>
             <div class="div_for_align_boxes">
                 <table class="table" border="1">
 
-                    <tr  :class="setCustomHeaders()">
+                    <tr :class="setCustomHeaders()">
                         <td class="static_headers" @click="sortTable(indexCol,header)" v-for="(header,indexCol) in table.rows" :key="indexCol">{{ header }} </td>
                     </tr>
                     <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in collection(table.value)" :key="rowIndex">
 
                         <td class="table_boxes" v-for="(props,colIndex) in parse(obj)" :key="colIndex" v-on:dblclick="editField(rowIndex,colIndex)">
-                            <input @keyup.esc.prevent="inputEditEsc()"
-                            @keyup.enter.prevent="inputEnter(rowIndex,colIndex)"
-                            @blur.prevent="wrapperBlur(rowIndex,colIndex)"
-                            v-model="inputText"
-                            v-if="isEditing(rowIndex,colIndex)" autofocus>
+                            <input v-focus @keyup.esc.prevent="inputEditEsc()" ref="input" @keyup.enter.prevent="inputEnter(rowIndex,colIndex)" @blur.prevent="wrapperBlur(rowIndex,colIndex)" v-model="inputText" v-if="isEditing(rowIndex,colIndex)">
                             <template v-else> {{ props}}
 </template>
                         </td>
@@ -60,6 +64,7 @@
     }
 
     .div_for_align_boxes {
+        margin-top:20px;
         width: 100%;
         display: flex;
         align-items: center;
@@ -103,10 +108,18 @@
     .addRow-icon {
         cursor: pointer;
     }
-td:hover{
-    cursor: pointer;
-}
+
+    td:hover {
+        cursor: pointer;
+    }
+
     .active {
         background: #FF6633;
+    }
+
+    .searchFields {
+        width: 20%;
+        display: flex;
+        justify-content: space-between;
     }
 </style>
