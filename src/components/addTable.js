@@ -10,7 +10,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      addEmptyTable: "addEmptyTable",
+      addEmptyTable: "ADD_EMPTY_TABLE",
     }),
     ...mapActions({
       addDefaultTable: "addDefaultTable"

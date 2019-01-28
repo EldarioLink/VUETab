@@ -30,12 +30,15 @@ export default new Vuex.Store({
       "Actions"
     ],
     isEditTable: false,
-    isSorting: [],
+    reverseKey: 'Action'
   },
   mutations: {
     // Индикатор загрузки
     IS_LOADING(state, payload) {
       state.isLoading = payload;
+    },
+    REVERSE_KEY(state, payload) {
+      state.reverseKey = payload;
     },
     // Редактируется ли таблица
     IS_EDIT_TABLE(state, payload) {
@@ -45,15 +48,10 @@ export default new Vuex.Store({
     GAP_JSON(state, payload) {
       state.gapJson = payload;
     },
-    // Отсортирована ли колонка
-    IS_SORTING(state, payload) {
-      state.isSorting[payload.colIndex] = payload.state;
-    },
     // Создание пользовательской таблицы
     ADD_DEFAULT_TABLE(state, payload) {
-
-         // Поднимаем вложенные объекты
-     function parse(parseObj) {
+      // Поднимаем вложенные объекты
+      function parse(parseObj) {
         var subarr = [];
         var getProp = o => {
           for (var prop in o) {
@@ -70,11 +68,11 @@ export default new Vuex.Store({
       // Сопоставим ключ-значение объектов
       function RM_NESTED_OBJ(value) {
         let parsedArr = [];
-        let Arr = []
+        let Arr = [];
         for (let i = 0; i < value.length; i++) {
           parsedArr[i] = parse(value[i]);
           let Gap = {};
-          for (let r = 0; r < state.static_headers.length-1; r++) {
+          for (let r = 0; r < state.static_headers.length - 1; r++) {
             Gap[state.static_headers[r]] = parsedArr[i][r];
           }
           Arr.push(Gap);
@@ -93,7 +91,7 @@ export default new Vuex.Store({
       state.isLoading = false;
     },
     // Создание пользовательской таблицы
-    addEmptyTable(state, payload) {
+    ADD_EMPTY_TABLE(state, payload) {
       let headers = payload.headers
         .toString()
         .replace(/\s+/g, "")
@@ -132,39 +130,37 @@ export default new Vuex.Store({
       let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
       let arrIn = {};
       for (let i = 0; i < payload.headers.length - 1; i++) {
-          arrIn[payload.headers[i]] = " ";
+        arrIn[payload.headers[i]] = " ";
       }
-      state.isSorting[payload.index] = true;
       state.tables[payload.indexTable].value.splice(indexID, 0, arrIn);
     },
     // Редактирование ячейки таблицы
     INPUT_EDIT(state, payload) {
-      console.log( payload.setRow,indexRow)
-      let indexRow = payload.indexRow   + (payload.page - 1) * 10;
+
       state.tables[payload.tableIndex].value.splice(
-       indexRow,
+        payload.indexRowAll,
         1,
         payload.setRow
       );
     },
     // Редактирование ячейки таблицы
     SORT_TABLE(state, payload) {
-      if (!state.isSorting[payload.index] === true) {
+      if (!(state.reverseKey === payload.header)) {
         var sortMethod = (a, b) => {
-            if (a[payload.header] < b[payload.header]) {
-              return -1;
-            }
-            if (a[payload.header] > b[payload.header]) {
-              return 1;
-            }
-            return 0;
-
+          if (a[payload.header] < b[payload.header]) {
+            return -1;
+          }
+          if (a[payload.header] > b[payload.header]) {
+            return 1;
+          }
+          return 0;
         };
+        state.reverseKey = payload.header
         state.tables[payload.tableIndex].value.sort(sortMethod);
-        state.isSorting[payload.index] = true;
       } else {
         state.tables[payload.tableIndex].value.reverse();
       }
+
     }
   },
   actions: {
@@ -190,6 +186,5 @@ export default new Vuex.Store({
     getisLoading: state => state.isLoading,
     getgapJson: state => state.gapJson,
     getIsEditTable: state => state.isEditTable,
-    getIsSorting: state => state.isSorting
   }
 });

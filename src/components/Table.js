@@ -14,7 +14,9 @@ export default {
       },
       inputText: undefined,
       keypressed: true,
-      search: ""
+      search: "",
+      sortKey: "name",
+      reverse: false
     };
   },
   computed: {
@@ -28,7 +30,7 @@ export default {
       "INPUT_EDIT",
       "IS_EDIT_TABLE",
       "SORT_TABLE",
-      "IS_SORTING"
+      "REVERSE_KEY"
     ]),
     // Редактирование ячейки
     isEditing(rowIndex, colIndex) {
@@ -38,6 +40,7 @@ export default {
         this.getIsEditTable
       );
     },
+
     // Перед редактированием ячейки
     editField(row, col) {
       this.edit.row = row;
@@ -72,15 +75,13 @@ export default {
         indexRow: indexRow,
         tableIndex: this.tableIndex,
         page: this.table.page,
-        setRow: Gap
+        setRow: Gap,
+        indexRowAll: indexRowAll,
+        colIndex: colIndex
       };
-
       this.INPUT_EDIT(data);
-      let sortData = {
-        colIndex: colIndex,
-        state: false
-      };
-      this.IS_SORTING(sortData);
+
+      this.REVERSE_KEY(false)
       this.inputText = "";
       this.IS_EDIT_TABLE(false);
       Gap = null;
@@ -152,6 +153,9 @@ export default {
     },
     // Сортировка таблицы
     sortTable(indexTd, header) {
+      if(header == 'Actions'){
+        return;
+      }
       let data = {
         index: indexTd,
         tableIndex: this.tableIndex,
