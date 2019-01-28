@@ -47,7 +47,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
     $hundred: 100%;
+
     @mixin flex-param($flex, $x, $y) {
         display: $flex;
         justify-content: $x;
@@ -64,6 +66,11 @@
         display: flex;
         flex-direction: column;
     }
+
+.btn_search {
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
 
     .table {
         width: $hundred;
@@ -104,14 +111,16 @@
         background: #CCFFFF;
     }
 
+      .active {
+        background: #FF6633;
+    }
+
     .addRow-icon,
     table:hover {
         cursor: pointer;
     }
 
-    .active {
-        background: #FF6633;
-    }
+
 
     .searchFields {
         @include flex-param(flex, space-between, $y: none);

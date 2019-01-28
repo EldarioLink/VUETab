@@ -130,17 +130,16 @@ export default new Vuex.Store({
     // Добавление строки
     ADD_ROW(state, payload) {
       let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
-      console.log(payload.headers.length )
-      console.log(payload.headers )
       let arrIn = {};
       for (let i = 0; i < payload.headers.length - 1; i++) {
-          arrIn[payload.headers[i]] = [i];
+          arrIn[payload.headers[i]] = " ";
       }
       state.isSorting[payload.index] = true;
       state.tables[payload.indexTable].value.splice(indexID, 0, arrIn);
     },
     // Редактирование ячейки таблицы
     INPUT_EDIT(state, payload) {
+      console.log( payload.setRow,indexRow)
       let indexRow = payload.indexRow   + (payload.page - 1) * 10;
       state.tables[payload.tableIndex].value.splice(
        indexRow,
@@ -152,17 +151,6 @@ export default new Vuex.Store({
     SORT_TABLE(state, payload) {
       if (!state.isSorting[payload.index] === true) {
         var sortMethod = (a, b) => {
-          if (~payload.header.indexOf(".")) {
-            let arr = payload.header.split(".");
-            let key = arr[1];
-            if (a.adress[key] < b.adress[key]) {
-              return -1;
-            }
-            if (a.adress[key] > b.adress[key]) {
-              return 1;
-            }
-            return 0;
-          } else {
             if (a[payload.header] < b[payload.header]) {
               return -1;
             }
@@ -170,7 +158,7 @@ export default new Vuex.Store({
               return 1;
             }
             return 0;
-          }
+
         };
         state.tables[payload.tableIndex].value.sort(sortMethod);
         state.isSorting[payload.index] = true;

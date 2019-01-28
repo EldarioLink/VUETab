@@ -7,11 +7,6 @@ export default {
       perPage: 10,
       pagination: {},
       saveTab: false,
-      tableData: {
-        page: 1,
-        col: null,
-        row: null
-      },
       edit: {
         row: null,
         col: null,
@@ -19,7 +14,7 @@ export default {
       },
       inputText: undefined,
       keypressed: true,
-      search: '',
+      search: ""
     };
   },
   computed: {
@@ -70,21 +65,14 @@ export default {
     },
     // Сохранение в ячейку таблицы нового значения таблицы
     inputSaveText(indexRow, colIndex) {
-
-      console.log(indexRow, colIndex)
-      this.edit.value = _.cloneDeep(this.table.value);
-      let Gap = _.cloneDeep(this.table.value[indexRow]);
-      console.log(Gap)
-
-      // let key = this.table.rows[colIndex];
-      // console.log(rowIndex,colIndex,this.table.rows, key)
-        Gap[colIndex] = this.inputText;
-      this.edit.value[indexRow] = Gap;
+      let indexRowAll = indexRow + (this.table.page - 1) * 10;
+      let Gap = _.cloneDeep(this.table.value[indexRowAll]);
+      Gap[colIndex] = this.inputText;
       let data = {
         indexRow: indexRow,
         tableIndex: this.tableIndex,
         page: this.table.page,
-        setRow: this.edit.value[indexRow]
+        setRow: Gap
       };
 
       this.INPUT_EDIT(data);
@@ -143,11 +131,6 @@ export default {
     setCustomTdOdd() {
       return this.table.options[2];
     },
-
-    copyTable() {
-      let copy = Object.assign({}, this.table);
-      this.tableData = copy;
-    },
     // Очистка таблицы
     cleanTable(index) {
       this.CLEAN_TABLE(index);
@@ -177,13 +160,20 @@ export default {
       this.SORT_TABLE(data);
     },
     filteredUsers(value) {
-      console.log(value)
       const s = this.search.toLowerCase();
-      return this.collection( value ).filter(n => Object.values(n).some(m => m.toString().toLowerCase().includes(s)));
+      let forSeach = value;
+      let m = forSeach.filter(n =>
+        Object.values(n).some(m =>
+          m
+            .toString()
+            .toLowerCase()
+            .includes(s)
+        )
+      );
+      return this.collection(m);
     }
   },
   mounted() {
-    this.copyTable();
     this.setPage(this.table.value.length, 1);
   }
 };
