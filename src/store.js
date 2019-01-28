@@ -30,7 +30,7 @@ export default new Vuex.Store({
       "Actions"
     ],
     isEditTable: false,
-    isSorting: []
+    isSorting: [],
   },
   mutations: {
     // Индикатор загрузки
@@ -49,12 +49,42 @@ export default new Vuex.Store({
     IS_SORTING(state, payload) {
       state.isSorting[payload.colIndex] = payload.state;
     },
-
     // Создание пользовательской таблицы
-    addDefaultTable(state, payload) {
+    ADD_DEFAULT_TABLE(state, payload) {
+
+         // Поднимаем вложенные объекты
+     function parse(parseObj) {
+        var subarr = [];
+        var getProp = o => {
+          for (var prop in o) {
+            if (typeof o[prop] === "object") {
+              getProp(o[prop]);
+            } else {
+              subarr.push(o[prop]);
+            }
+          }
+        };
+        getProp(parseObj);
+        return subarr;
+      }
+      // Сопоставим ключ-значение объектов
+      function RM_NESTED_OBJ(value) {
+        let parsedArr = [];
+        let Arr = []
+        for (let i = 0; i < value.length; i++) {
+          parsedArr[i] = parse(value[i]);
+          let Gap = {};
+          for (let r = 0; r < state.static_headers.length-1; r++) {
+            Gap[state.static_headers[r]] = parsedArr[i][r];
+          }
+          Arr.push(Gap);
+        }
+        return Arr;
+      }
+      let response = RM_NESTED_OBJ(payload.response);
       let el = Object.assign({}, state.tableFields);
       el.rows = state.static_headers;
-      el.value = payload.response;
+      el.value = response;
       el.isLoading = false;
       el.options = payload.css
         ? payload.css.replace(/\s+/g, "").split(",", 3)
@@ -97,28 +127,25 @@ export default new Vuex.Store({
     REMOVE_TABLE(state, payload) {
       state.tables.splice(payload, 1);
     },
-     // Добавление строки
+    // Добавление строки
     ADD_ROW(state, payload) {
       let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
+      console.log(payload.headers.length )
+      console.log(payload.headers )
       let arrIn = {};
       for (let i = 0; i < payload.headers.length - 1; i++) {
-        if (~payload.headers[i].indexOf(".")) {
-          let arr = payload.headers[i].split(".");
-          if (!arrIn[arr[0]]) arrIn[arr[0]] = {};
-          arrIn[arr[0]][arr[1]] = '';
-        } else {
-          arrIn[payload.headers[i]] = '';
-        }
+          arrIn[payload.headers[i]] = [i];
       }
       state.isSorting[payload.index] = true;
       state.tables[payload.indexTable].value.splice(indexID, 0, arrIn);
     },
-      // Редактирование ячейки таблицы
+    // Редактирование ячейки таблицы
     INPUT_EDIT(state, payload) {
+      let indexRow = payload.indexRow   + (payload.page - 1) * 10;
       state.tables[payload.tableIndex].value.splice(
-        payload.rowIndex,
+       indexRow,
         1,
-        payload.inputText
+        payload.setRow
       );
     },
     // Редактирование ячейки таблицы
@@ -165,7 +192,7 @@ export default new Vuex.Store({
             css: payload.css,
             response: response.data
           };
-          state.commit("addDefaultTable", data);
+          state.commit("ADD_DEFAULT_TABLE", data);
         });
     }
   },

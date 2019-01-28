@@ -2,12 +2,7 @@
     <div>
         <div class="parent_table">
             <div class="searchFields">
-                <input type="text">
-                <select v-model="selected">
-                  <option v-for="(option, choiseItem) in options" v-bind:value="option.value" :key="choiseItem" >
-                    {{ option.text }}
-                  </option>
-                </select>
+                <input v-model="search" placeholder="поиск...." type="text">
             </div>
             <div class="div_for_align_boxes">
                 <table class="table" border="1">
@@ -15,9 +10,9 @@
                     <tr :class="setCustomHeaders()">
                         <td class="static_headers" @click="sortTable(indexCol,header)" v-for="(header,indexCol) in table.rows" :key="indexCol">{{ header }} </td>
                     </tr>
-                    <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in collection(table.value)" :key="rowIndex">
+                    <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in filteredUsers( table.value )" :key="rowIndex">
 
-                        <td class="table_boxes" v-for="(props,colIndex) in parse(obj)" :key="colIndex" v-on:dblclick="editField(rowIndex,colIndex)">
+                        <td class="table_boxes" v-for="(props,colIndex) in  obj" :key="colIndex" v-on:dblclick="editField(rowIndex,colIndex)">
                             <input v-focus @keyup.esc.prevent="inputEditEsc()" ref="input" @keyup.enter.prevent="inputEnter(rowIndex,colIndex)" @blur.prevent="wrapperBlur(rowIndex,colIndex)" v-model="inputText" v-if="isEditing(rowIndex,colIndex)">
                             <template v-else> {{ props}}
 </template>
@@ -51,46 +46,50 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+    $hundred: 100%;
+    @mixin flex-param($flex, $x, $y) {
+        display: $flex;
+        justify-content: $x;
+        align-items: $y;
+    }
+
+    %tableOptions {
+        padding: 10px;
+        border: 2px solid gray;
+        text-align: center;
+    }
+
     .parent_table {
         display: flex;
         flex-direction: column;
     }
 
     .table {
-        width: 100%;
+        width: $hundred;
         border-collapse: collapse;
         border: 2px solid gray;
     }
 
     .div_for_align_boxes {
-        margin-top:20px;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @include flex-param(flex, center, center);
+        margin-top: 20px;
+        width: $hundred;
     }
 
     .static_headers,
     .table_boxes {
-        padding: 10px;
-        text-align: center;
-        border: 2px solid gray;
+        @extend %tableOptions;
     }
 
     .table_all_controls {
+        @include flex-param(flex, space-around, flex-end);
         margin-top: 40px;
-        align-items: flex-end;
-        display: flex;
-        justify-content: space-around;
     }
 
     .no-wrap-section {
+        @extend %tableOptions;
         white-space: nowrap;
-        text-align: center;
-        padding: 10px;
-        text-align: center;
-        border: 2px solid gray;
     }
 
     .customize-headers {
@@ -105,11 +104,8 @@
         background: #CCFFFF;
     }
 
-    .addRow-icon {
-        cursor: pointer;
-    }
-
-    td:hover {
+    .addRow-icon,
+    table:hover {
         cursor: pointer;
     }
 
@@ -118,8 +114,7 @@
     }
 
     .searchFields {
-        width: 20%;
-        display: flex;
-        justify-content: space-between;
+        @include flex-param(flex, space-between, $y: none);
+        width: $hundred / 5;
     }
 </style>

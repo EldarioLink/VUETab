@@ -1,6 +1,5 @@
 import { mapMutations } from "vuex";
 import { mapGetters } from "vuex";
-import { delay } from "q";
 export default {
   props: ["table", "tableIndex"],
   data() {
@@ -20,13 +19,7 @@ export default {
       },
       inputText: undefined,
       keypressed: true,
-      selected: 'А',
-      options: [
-        { text: 'Один', value: 'А' },
-        { text: 'Два', value: 'Б' },
-        { text: 'Три', value: 'В' }
-      ],
-
+      search: '',
     };
   },
   computed: {
@@ -42,21 +35,6 @@ export default {
       "SORT_TABLE",
       "IS_SORTING"
     ]),
-    // Избавимся от вложенных элементов
-    parse(parseObj) {
-      var subarr = [];
-      var getProp = o => {
-        for (var prop in o) {
-          if (typeof o[prop] === "object") {
-            getProp(o[prop]);
-          } else {
-            subarr.push(o[prop]);
-          }
-        }
-      };
-      getProp(parseObj);
-      return subarr;
-    },
     // Редактирование ячейки
     isEditing(rowIndex, colIndex) {
       return (
@@ -86,28 +64,27 @@ export default {
       this.IS_EDIT_TABLE(false);
     },
     // Сохранение редактированного значения
-    inputEnter(rowIndex, colIndex) {
+    inputEnter(indexRow, colIndex) {
       this.keypressed = false;
-      this.inputSaveText(rowIndex, colIndex);
+      this.inputSaveText(indexRow, colIndex);
     },
     // Сохранение в ячейку таблицы нового значения таблицы
-    inputSaveText(rowIndex, colIndex) {
+    inputSaveText(indexRow, colIndex) {
+
+      console.log(indexRow, colIndex)
       this.edit.value = _.cloneDeep(this.table.value);
-      var Gap = _.cloneDeep(this.table.value[rowIndex]);
+      let Gap = _.cloneDeep(this.table.value[indexRow]);
       console.log(Gap)
-      let key = this.table.rows[colIndex];
-      if (~key.indexOf(".")) {
-        let arr = key.split(".");
-        Gap[arr[0]][arr[1]] = this.inputText;
-      } else {
-        Gap[key] = this.inputText;
-      }
-      console.log(Gap)
-      this.edit.value[rowIndex] = Gap;
+
+      // let key = this.table.rows[colIndex];
+      // console.log(rowIndex,colIndex,this.table.rows, key)
+        Gap[colIndex] = this.inputText;
+      this.edit.value[indexRow] = Gap;
       let data = {
-        rowIndex: rowIndex,
+        indexRow: indexRow,
         tableIndex: this.tableIndex,
-        inputText: this.edit.value[rowIndex]
+        page: this.table.page,
+        setRow: this.edit.value[indexRow]
       };
 
       this.INPUT_EDIT(data);
@@ -126,12 +103,12 @@ export default {
     },
     // Данные для пагинаций
     setPage(length, page) {
-      this.tableData.page = page;
+      this.table.page = page;
       this.pagination = this.paginator(length, page);
     },
     // Подсветка активной страницы пагинации
     checkActivePage(page) {
-      if (page == this.tableData.page) {
+      if (page == this.table.page) {
         return "active";
       }
     },
@@ -180,11 +157,11 @@ export default {
       this.REMOVE_TABLE(index);
     },
     // Добавление строки в таблицу
-    addRow(index, indexRow) {
+    addRow(indexTable, indexRow) {
       let indexesEl = {
-        indexTable: index,
+        indexTable: indexTable,
         indexRow: indexRow,
-        page: this.tableData.page,
+        page: this.table.page,
         headers: this.table.rows
       };
       this.ADD_ROW(indexesEl);
@@ -198,10 +175,14 @@ export default {
         header: header
       };
       this.SORT_TABLE(data);
+    },
+    filteredUsers(value) {
+      console.log(value)
+      const s = this.search.toLowerCase();
+      return this.collection( value ).filter(n => Object.values(n).some(m => m.toString().toLowerCase().includes(s)));
     }
   },
   mounted() {
-
     this.copyTable();
     this.setPage(this.table.value.length, 1);
   }
