@@ -15,8 +15,7 @@ export default {
       inputText: undefined,
       keypressed: true,
       search: "",
-      sortKey: "name",
-      reverse: false
+      sortKey: "name"
     };
   },
   computed: {
@@ -70,7 +69,11 @@ export default {
     inputSaveText(indexRow, colIndex) {
       let indexRowAll = indexRow + (this.table.page - 1) * 10;
       let Gap = _.cloneDeep(this.table.value[indexRowAll]);
-      Gap[colIndex] = this.inputText;
+      if (isNaN(this.inputText)) {
+        Gap[colIndex] = this.inputText;
+      } else {
+        Gap[colIndex] = +this.inputText;
+      }
       let data = {
         indexRow: indexRow,
         tableIndex: this.tableIndex,
@@ -81,7 +84,7 @@ export default {
       };
       this.INPUT_EDIT(data);
 
-      this.REVERSE_KEY(false)
+      this.REVERSE_KEY("1444");
       this.inputText = "";
       this.IS_EDIT_TABLE(false);
       Gap = null;
@@ -153,7 +156,7 @@ export default {
     },
     // Сортировка таблицы
     sortTable(indexTd, header) {
-      if(header == 'Actions'){
+      if (header == "Actions") {
         return;
       }
       let data = {

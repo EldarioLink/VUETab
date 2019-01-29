@@ -98,10 +98,10 @@ export default new Vuex.Store({
         .split(",");
       headers.push("Actions");
       let arr = [];
-      let arrIn = [];
+      let arrIn = {};
       for (let index = 0; index < payload.rows; index++) {
         for (let i = 0; i < headers.length - 1; i++) {
-          arrIn[i] = "";
+          arrIn[headers[i]] = "";
         }
         arr.push(arrIn);
       }
@@ -136,7 +136,6 @@ export default new Vuex.Store({
     },
     // Редактирование ячейки таблицы
     INPUT_EDIT(state, payload) {
-
       state.tables[payload.tableIndex].value.splice(
         payload.indexRowAll,
         1,
@@ -146,6 +145,7 @@ export default new Vuex.Store({
     // Редактирование ячейки таблицы
     SORT_TABLE(state, payload) {
       if (!(state.reverseKey === payload.header)) {
+
         var sortMethod = (a, b) => {
           if (a[payload.header] < b[payload.header]) {
             return -1;
