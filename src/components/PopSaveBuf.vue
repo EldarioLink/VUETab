@@ -9,8 +9,8 @@
               <button @click="copyToBuffer">Скопировать</button>
               <button @click="readBuffer(tableIndex)">Восстановить</button>
               <button class="modal-default-button" @click="$emit('close')">
-     OK
-   </button>
+       OK
+     </button>
             </div>
           </div>
         </div>
@@ -19,11 +19,9 @@
   </div>
 </template>
 
-<script  src="./popup.js">
-
+<script src="./PopSaveBuf.js">
 </script>
 
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .modal-mask {
     position: fixed;

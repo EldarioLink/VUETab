@@ -19,7 +19,6 @@ export default {
         this.$emit('close');
       },
     checkInputs() {
-      // Если есть ли заголовки таблицы, то создаем пользо-ую таблицу
       if (this.headers ) {
         let user_tb = {
           headers: this.headers,

@@ -30,27 +30,38 @@ export default new Vuex.Store({
       "Actions"
     ],
     isEditTable: false,
-    reverseKey: 'Action'
+    reverseKey: "Action"
   },
   mutations: {
-    // Индикатор загрузки
+    /**
+   * Индикатор загрузки таблицы
+   */
     IS_LOADING(state, payload) {
       state.isLoading = payload;
     },
+    /**
+   * Ключ для определения момента реверсирования/сортировки
+   */
     REVERSE_KEY(state, payload) {
       state.reverseKey = payload;
     },
-    // Редактируется ли таблица
     IS_EDIT_TABLE(state, payload) {
       state.isEditTable = payload;
     },
-    // Для хранения json перед восстановлением таблицы
+    /**
+   * Промежуточная переменная для хранения json перед восстановлением
+   */
     GAP_JSON(state, payload) {
       state.gapJson = payload;
     },
-    // Создание пользовательской таблицы
+    /**
+   * Создание таблицы
+   * @param {*} payload - данные сервера, названия классов стилей
+   */
     ADD_DEFAULT_TABLE(state, payload) {
-      // Поднимаем вложенные объекты
+    /**
+   * Разбор вложенных объектов
+   */
       function parse(parseObj) {
         var subarr = [];
         var getProp = o => {
@@ -65,7 +76,9 @@ export default new Vuex.Store({
         getProp(parseObj);
         return subarr;
       }
-      // Сопоставим ключ-значение объектов
+    /**
+   * Сопоставление пары ключ-значение разобранных объектов
+   */
       function RM_NESTED_OBJ(value) {
         let parsedArr = [];
         let Arr = [];
@@ -90,7 +103,11 @@ export default new Vuex.Store({
       state.tables.push(el);
       state.isLoading = false;
     },
-    // Создание пользовательской таблицы
+
+     /**
+   * Создание таблицы
+   * @param {*} payload - заголовки, кол-во строк, стили
+   */
     ADD_EMPTY_TABLE(state, payload) {
       let headers = payload.headers
         .toString()
@@ -113,19 +130,28 @@ export default new Vuex.Store({
         : [];
       state.tables.push(el);
     },
-    // Очистка таблицы
+     /**
+   * Очистка таблицы
+   */
     CLEAN_TABLE(state, payload) {
       state.tables[payload].value = [];
     },
-    // Восстановление таблицы
+     /**
+   *Восстановление таблицы
+   */
     RECOVERY_TABLE(state, payload) {
       state.tables[payload].value = JSON.parse(state.gapJson);
     },
-    // Удаление таблицы
+       /**
+   * Удаление таблицы
+   */
     REMOVE_TABLE(state, payload) {
       state.tables.splice(payload, 1);
     },
-    // Добавление строки
+       /**
+   * Добавление строки
+   *  @param {*} payload - индекс строки, активная страница, заголовки таблицы
+   */
     ADD_ROW(state, payload) {
       let indexID = payload.indexRow + 1 + (payload.page - 1) * 10;
       let arrIn = {};
@@ -134,7 +160,10 @@ export default new Vuex.Store({
       }
       state.tables[payload.indexTable].value.splice(indexID, 0, arrIn);
     },
-    // Редактирование ячейки таблицы
+       /**
+   * Редактирование ячейки таблицы
+   * @param {*} payload - индекс таблицы, индекс строки, отредактированная строки
+   */
     INPUT_EDIT(state, payload) {
       state.tables[payload.tableIndex].value.splice(
         payload.indexRowAll,
@@ -142,10 +171,12 @@ export default new Vuex.Store({
         payload.setRow
       );
     },
-    // Редактирование ячейки таблицы
+       /**
+   * Сортировка столбца
+   * @param {*} payload - заголовки таблицы, индекс таблицы
+   */
     SORT_TABLE(state, payload) {
       if (!(state.reverseKey === payload.header)) {
-
         var sortMethod = (a, b) => {
           if (a[payload.header] < b[payload.header]) {
             return -1;
@@ -155,16 +186,17 @@ export default new Vuex.Store({
           }
           return 0;
         };
-        state.reverseKey = payload.header
+        state.reverseKey = payload.header;
         state.tables[payload.tableIndex].value.sort(sortMethod);
       } else {
         state.tables[payload.tableIndex].value.reverse();
       }
-
     }
   },
   actions: {
-    // Создание таблицы по умолчанию
+       /**
+   * Создаем таблицу, делаем запрос и при успешном ответе отправим полученны данные на обработку в мутацию
+   */
     addDefaultTable(state, payload) {
       state.commit("IS_LOADING", true);
       axios
@@ -185,6 +217,6 @@ export default new Vuex.Store({
     getStaticHeaders: state => state.static_headers,
     getisLoading: state => state.isLoading,
     getgapJson: state => state.gapJson,
-    getIsEditTable: state => state.isEditTable,
+    getIsEditTable: state => state.isEditTable
   }
 });

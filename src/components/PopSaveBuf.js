@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     ...mapMutations(["GAP_JSON", "RECOVERY_TABLE"]),
-    //  копирование данных в буфер обмена
+
     copyToBuffer() {
       const elTag = document.querySelector(".textfield");
       const outputJSON = elTag.value.trim();
@@ -28,7 +28,10 @@ export default {
         this.GAP_JSON(outputJSON);
       }
     },
-    // восстановление данных из буфера обмена
+/**
+   * Восстановление таблицы с буфера обмена
+   * @param {*} index - индекс восстанавливаемой таблицы
+   */
     readBuffer(index) {
       navigator.clipboard.readText().then(text => {
         if (_.isEqual(text, this.getgapJson)) {

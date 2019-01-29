@@ -2,25 +2,22 @@
     <div>
         <div class="parent_table">
             <div class="searchFields">
-                <input v-model="search" placeholder="поиск...." type="text">
+                <input @input="filteredTable(table.value)" v-model="search" placeholder="поиск...." type="text">
             </div>
             <div class="div_for_align_boxes">
                 <table class="table" border="1">
-
                     <tr :class="setCustomHeaders()">
                         <td class="static_headers" @click="sortTable(indexCol,header)" v-for="(header,indexCol) in table.rows" :key="indexCol">{{ header }} </td>
                     </tr>
-                    <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in filteredUsers( table.value )" :key="rowIndex">
-
+                    <tr :class="[setCustomTdEven(), setCustomTdOdd() ]" v-for="(obj,rowIndex) in collection()" :key="rowIndex">
                         <td class="table_boxes" v-for="(props,colIndex) in  obj" :key="colIndex" v-on:dblclick="editField(rowIndex,colIndex)">
-                            <input v-focus @keyup.esc.prevent="inputEditEsc()" ref="input" @keyup.enter.prevent="inputEnter(rowIndex,colIndex)" @blur.prevent="wrapperBlur(rowIndex,colIndex)" v-model="inputText" v-if="isEditing(rowIndex,colIndex)">
+                            <input class="inputEdit" @keyup.esc.prevent="inputEditEsc()" @keyup.enter.prevent="inputEnter(rowIndex,colIndex)" @blur.prevent="wrapperBlur(rowIndex,colIndex)" v-model="inputText" v-if="isEditing(rowIndex,colIndex)">
                             <template v-else> {{ props}}
 </template>
                         </td>
-
                         <td class="no-wrap-section">
                             <div class="addRow-icon" @click.prevent="addRow(tableIndex,rowIndex)">
-                                <down-icon/>
+                                <addRow-icon/>
                             </div>
                         </td>
                     </tr>
@@ -33,11 +30,11 @@
                     <button id="show-modal" @click="saveTab = true">Получить таблицу</button>
                 </div>
                 <div class="pagination_controls">
-                    <button v-for="p in pagination.pages" :class="checkActivePage(p)" :key="p" @click.prevent="setPage(table.value.length,p)">{{ p }}</button>
+                    <button v-for="p in pagination.pages" :class="checkActivePage(p)" :key="p" @click.prevent="setPage(p)">{{ p }}</button>
                 </div>
             </div>
         </div>
-        <popup v-if="saveTab" :table="this.table.value" :tableIndex="tableIndex" @close="saveTab=false"></popup>
+        <save-buffer v-if="saveTab" :table="this.table.value" :tableIndex="tableIndex" @close="saveTab=false"></save-buffer>
     </div>
 </template>
 
@@ -45,11 +42,8 @@
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
     $hundred: 100%;
-
     @mixin flex-param($flex, $x, $y) {
         display: $flex;
         justify-content: $x;
@@ -67,10 +61,10 @@
         flex-direction: column;
     }
 
-.btn_search {
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
+    .btn_search {
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
 
     .table {
         width: $hundred;
@@ -87,6 +81,7 @@
     .static_headers,
     .table_boxes {
         @extend %tableOptions;
+        white-space: pre-wrap;
     }
 
     .table_all_controls {
@@ -111,7 +106,7 @@
         background: #CCFFFF;
     }
 
-      .active {
+    .active {
         background: #FF6633;
     }
 
@@ -120,7 +115,9 @@
         cursor: pointer;
     }
 
-
+    .inputEdit {
+        width: 70%;
+    }
 
     .searchFields {
         @include flex-param(flex, space-between, $y: none);

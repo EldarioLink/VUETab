@@ -6,16 +6,16 @@
         <p>
           Название заголовков (через запятую):
         </p>
-        <input v-model="headers" class="inp" type="text">
+        <input v-model="headers" class="inputs" type="text">
 
         <p>
           Количество строк в таблице (через запятую):
         </p>
-        <input v-model="rows" class="inp" type="text">
+        <input v-model="rows" class="inputs" type="text">
         <p>
           Стилизация строки заголовка, четной и нечетной строки (через запятую):
         </p>
-        <input v-model="css_table" class="inp" type="text">
+        <input v-model="css_table" class="inputs" type="text">
         <button class="modal-default-button" @click="checkInputs">
                              Добавить
                             </button>
@@ -24,18 +24,16 @@
   </div>
 </template>
 
-<script src="./addTable.js">
-
+<script src="./AddTable.js">
 </script>
 
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   p {
     font-size: 10pt;
     color: black;
   }
 
-  .inp {
+  .inputs {
     width: 80%;
     line-height: 25px;
     border-radius: 5px;
