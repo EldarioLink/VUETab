@@ -41,10 +41,9 @@
 
 <style>
   .btn_add_table {
-    border: 0px solid black;
-    width: 10%;
-    height: 5%;
-    line-height: 30px;
+   width: 100%;
+   min-width: 50px;
+   max-width: 190px;
   }
 
   .tables {
